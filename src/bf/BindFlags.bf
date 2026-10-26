@@ -3,7 +3,7 @@ namespace Juno;
 using System;
 using System.Interop;
 
-[CRepr, AllowDuplicates]
+[CRepr]
 enum BindFlags : c_uint
 {
 	case None = 0;
