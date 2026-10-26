@@ -113,7 +113,7 @@ struct JunoTexture
 	ComPtr<ID3D11RenderTargetView> mRTV;
 	ComPtr<ID3D11DepthStencilView> mDSV;
 	ComPtr<ID3D11UnorderedAccessView> mUAV;
-	JunoTextureDesc mDesc = {};
+	JunoTextureCreateInfo mCreateInfo = {};
 	bool bOwnedBySwapChain = false;
 };
 

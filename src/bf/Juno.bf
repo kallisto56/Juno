@@ -98,7 +98,7 @@ static class Juno
 	extern static public void SetUnorderedAccessBuffers(Device* pDevice, c_uint mStartSlot, c_uint mCount, Buffer** ppBuffers);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateTexture")]
-	extern static public ErrorCode CreateTexture(Device* pDevice, TextureDesc* pDesc, void* pInitialData, c_uint mRowPitch, out Texture* ppTexture);
+	extern static public ErrorCode CreateTexture(Texture.CreateInfo* pCreateInfo, out Texture* ppTexture);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDestroyTexture")]
 	extern static public void DestroyTexture(Texture* pTexture);

@@ -36,17 +36,17 @@ static FormatSet ResolveFormats(DXGI_FORMAT format, bool bDepth, bool bSrv)
 	return set;
 }
 
-JUNO_API JunoErrorCode JunoCreateTexture(JunoDevice* pDevice, const JunoTextureDesc* pDesc, const void* pInitialData, c_uint mRowPitch, JunoTexture** ppTexture)
+JUNO_API JunoErrorCode JunoCreateTexture(const JunoTextureCreateInfo* pCreateInfo, JunoTexture** ppTexture)
 {
-	JUNO_REQUIRE(pDevice != nullptr);
-	JUNO_REQUIRE(pDesc != nullptr);
+	JUNO_REQUIRE(pCreateInfo->mDevice != nullptr);
+	JUNO_REQUIRE(pCreateInfo != nullptr);
 	JUNO_REQUIRE(ppTexture != nullptr);
 	*ppTexture = nullptr;
-	JUNO_REQUIRE(pDesc->mWidth > 0 && pDesc->mHeight > 0);
-	JUNO_REQUIRE(pDesc->mFormat != JunoPixelFormat_Unknown);
-	JUNO_REQUIRE(pInitialData == nullptr || mRowPitch > 0);
+	JUNO_REQUIRE(pCreateInfo->mWidth > 0 && pCreateInfo->mHeight > 0);
+	JUNO_REQUIRE(pCreateInfo->mFormat != JunoPixelFormat_Unknown);
+	JUNO_REQUIRE(pCreateInfo->mInitialData == nullptr || pCreateInfo->mRowPitch > 0);
 
-	JunoTextureDesc desc = *pDesc;
+	JunoTextureCreateInfo desc = *pCreateInfo;
 	if (desc.mSampleCount == 0)
 		desc.mSampleCount = 1;
 	if (desc.bCubemap)
@@ -56,13 +56,13 @@ JUNO_API JunoErrorCode JunoCreateTexture(JunoDevice* pDevice, const JunoTextureD
 	if (desc.mSampleCount > 1)
 		desc.mMipLevels = 1;
 
-	UINT bind = desc.mBindFlags;
+	JunoBindFlags bind = desc.mBindFlags;
 	UINT misc = 0;
 	if (desc.bGenerateMips)
 	{
 		JUNO_REQUIRE(desc.mUsage == JunoUsage_Default);
 		JUNO_REQUIRE(desc.mSampleCount == 1);
-		bind |= D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		bind |= JunoBindFlags_RenderTarget | JunoBindFlags_ShaderResource;
 		misc |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
 	}
 	if (desc.bCubemap)
@@ -72,7 +72,7 @@ JUNO_API JunoErrorCode JunoCreateTexture(JunoDevice* pDevice, const JunoTextureD
 	const bool bImmutable = (desc.mUsage == JunoUsage_Immutable);
 	if (bImmutable)
 	{
-		JUNO_REQUIRE(pInitialData != nullptr);
+		JUNO_REQUIRE(pCreateInfo->mInitialData != nullptr);
 		JUNO_REQUIRE(desc.mMipLevels == 1 && desc.mArraySize == 1);
 	}
 
@@ -94,14 +94,14 @@ JUNO_API JunoErrorCode JunoCreateTexture(JunoDevice* pDevice, const JunoTextureD
 	td.MiscFlags = misc;
 
 	D3D11_SUBRESOURCE_DATA init = {};
-	init.pSysMem = pInitialData;
-	init.SysMemPitch = mRowPitch;
+	init.pSysMem = pCreateInfo->mInitialData;
+	init.SysMemPitch = pCreateInfo->mRowPitch;
 
 	JunoTexture* pTexture = new (std::nothrow) JunoTexture();
 	JUNO_REQUIRE_ALLOC(pTexture);
 
-	ID3D11Device* pNative = pDevice->mDevice.Get();
-	ID3D11DeviceContext* pCtx = pDevice->mContext.Get();
+	ID3D11Device* pNative = pCreateInfo->mDevice->mDevice.Get();
+	ID3D11DeviceContext* pCtx = pCreateInfo->mDevice->mContext.Get();
 
 	HRESULT hr = pNative->CreateTexture2D(&td, bImmutable ? &init : nullptr, &pTexture->mTexture);
 	if (FAILED(hr))
@@ -114,7 +114,7 @@ JUNO_API JunoErrorCode JunoCreateTexture(JunoDevice* pDevice, const JunoTextureD
 	pTexture->mTexture->GetDesc(&td);
 	desc.mMipLevels = td.MipLevels;
 	desc.mBindFlags = bind;
-	pTexture->mDesc = desc;
+	pTexture->mCreateInfo = desc;
 
 	ID3D11Texture2D* pRes = pTexture->mTexture.Get();
 
@@ -216,9 +216,9 @@ JUNO_API JunoErrorCode JunoCreateTexture(JunoDevice* pDevice, const JunoTextureD
 		}
 	}
 
-	if (pInitialData != nullptr && !bImmutable)
+	if (pCreateInfo->mInitialData != nullptr && !bImmutable)
 	{
-		pCtx->UpdateSubresource(pRes, 0, nullptr, pInitialData, mRowPitch, 0);
+		pCtx->UpdateSubresource(pRes, 0, nullptr, pCreateInfo->mInitialData, pCreateInfo->mRowPitch, 0);
 		if (desc.bGenerateMips)
 			pCtx->GenerateMips(pTexture->mSRV.Get());
 	}
@@ -243,11 +243,11 @@ JUNO_API JunoErrorCode JunoUpdateTexture(JunoDevice* pDevice, JunoTexture* pText
 	JUNO_REQUIRE(pTexture != nullptr);
 	JUNO_REQUIRE(pData != nullptr);
 	JUNO_REQUIRE(mRowPitch > 0);
-	JUNO_REQUIRE(pTexture->mDesc.mUsage == JunoUsage_Default);
-	JUNO_REQUIRE(mArraySlice < pTexture->mDesc.mArraySize);
-	JUNO_REQUIRE(mMipLevel < pTexture->mDesc.mMipLevels);
+	JUNO_REQUIRE(pTexture->mCreateInfo.mUsage == JunoUsage_Default);
+	JUNO_REQUIRE(mArraySlice < pTexture->mCreateInfo.mArraySize);
+	JUNO_REQUIRE(mMipLevel < pTexture->mCreateInfo.mMipLevels);
 
-	UINT subresource = D3D11CalcSubresource(mMipLevel, mArraySlice, pTexture->mDesc.mMipLevels);
+	UINT subresource = D3D11CalcSubresource(mMipLevel, mArraySlice, pTexture->mCreateInfo.mMipLevels);
 
 	D3D11_BOX box = {};
 	const D3D11_BOX* pBox = nullptr;
@@ -275,7 +275,7 @@ JUNO_API JunoErrorCode JunoMapTexture(JunoDevice* pDevice, JunoTexture* pTexture
 	*ppData = nullptr;
 	*pRowPitch = 0;
 
-	UINT subresource = D3D11CalcSubresource(mMipLevel, mArraySlice, pTexture->mDesc.mMipLevels);
+	UINT subresource = D3D11CalcSubresource(mMipLevel, mArraySlice, pTexture->mCreateInfo.mMipLevels);
 	D3D11_MAPPED_SUBRESOURCE mapped = {};
 	HRESULT hr = pDevice->mContext->Map(pTexture->mTexture.Get(), subresource, (D3D11_MAP)mMode, 0, &mapped);
 	if (FAILED(hr))
@@ -290,7 +290,7 @@ JUNO_API void JunoUnmapTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uin
 {
 	JUNO_REQUIRE_VOID(pDevice != nullptr);
 	JUNO_REQUIRE_VOID(pTexture != nullptr);
-	UINT subresource = D3D11CalcSubresource(mMipLevel, mArraySlice, pTexture->mDesc.mMipLevels);
+	UINT subresource = D3D11CalcSubresource(mMipLevel, mArraySlice, pTexture->mCreateInfo.mMipLevels);
 	pDevice->mContext->Unmap(pTexture->mTexture.Get(), subresource);
 }
 
@@ -315,14 +315,14 @@ JUNO_API void JunoResolveTexture(JunoDevice* pDevice, JunoTexture* pDst, JunoTex
 	JUNO_REQUIRE_VOID(pDevice != nullptr);
 	JUNO_REQUIRE_VOID(pDst != nullptr);
 	JUNO_REQUIRE_VOID(pSrc != nullptr);
-	pDevice->mContext->ResolveSubresource(pDst->mTexture.Get(), 0, pSrc->mTexture.Get(), 0, (DXGI_FORMAT)pDst->mDesc.mFormat);
+	pDevice->mContext->ResolveSubresource(pDst->mTexture.Get(), 0, pSrc->mTexture.Get(), 0, (DXGI_FORMAT)pDst->mCreateInfo.mFormat);
 }
 
 JUNO_API void JunoGetTextureSize(JunoTexture* pTexture, c_uint* pWidth, c_uint* pHeight)
 {
 	JUNO_REQUIRE_VOID(pTexture != nullptr);
-	if (pWidth) *pWidth = pTexture->mDesc.mWidth;
-	if (pHeight) *pHeight = pTexture->mDesc.mHeight;
+	if (pWidth) *pWidth = pTexture->mCreateInfo.mWidth;
+	if (pHeight) *pHeight = pTexture->mCreateInfo.mHeight;
 }
 
 JUNO_API void JunoClearRenderTarget(JunoDevice* pDevice, JunoTexture* pTexture, float mR, float mG, float mB, float mA)

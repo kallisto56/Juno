@@ -128,6 +128,16 @@ typedef enum JunoBindFlags
 	JunoBindFlags_UnorderedAccess = 0x80,
 } JunoBindFlags;
 
+inline JunoBindFlags operator|(JunoBindFlags lhs, JunoBindFlags rhs) {
+	using T = std::underlying_type_t<JunoBindFlags>;
+	return static_cast<JunoBindFlags>(static_cast<T>(lhs) | static_cast<T>(rhs));
+}
+
+inline JunoBindFlags& operator|=(JunoBindFlags& lhs, JunoBindFlags rhs) {
+	lhs = lhs | rhs;
+	return lhs;
+}
+
 typedef enum JunoCpuAccessFlags
 {
 	JunoCpuAccessFlags_None = 0,
@@ -326,20 +336,23 @@ typedef struct JunoBufferCreateInfo
 	void* mInitialData;         /* Initial data (optional, unless JunoUsage_Immutable is set) */
 } JunoBufferCreateInfo;
 
-typedef struct JunoTextureDesc
+typedef struct JunoTextureCreateInfo
 {
+	JunoDevice* mDevice;
 	c_uint mWidth;
 	c_uint mHeight;
-	c_uint mMipLevels;          /* 0 = full chain. */
+	c_uint mMipLevels;                     /* 0 = full chain. */
 	c_uint mArraySize;
 	c_uint mSampleCount;
 	JunoPixelFormat mFormat;
 	JunoUsage mUsage;
-	c_uint mBindFlags;          /* JunoBindFlags */
-	c_uint mCpuAccessFlags;     /* JunoCpuAccessFlags */
-	c_bool bGenerateMips;       /* Adds RenderTarget + ShaderResource bind flags, generates mips after the initial upload. */
-	c_bool bCubemap;            /* mArraySize is forced to 6. */
-} JunoTextureDesc;
+	JunoBindFlags mBindFlags;
+	JunoCpuAccessFlags mCpuAccessFlags;
+	c_bool bGenerateMips;                  /* Adds RenderTarget + ShaderResource bind flags, generates mips after the initial upload. */
+	c_bool bCubemap;                       /* mArraySize is forced to 6. */
+	void* mInitialData;
+	c_uint mRowPitch;
+} JunoTextureCreateInfo;
 
 typedef struct JunoRegion
 {
@@ -488,7 +501,7 @@ JUNO_API void JunoSetUnorderedAccessBuffers(JunoDevice* pDevice, c_uint mStartSl
 /* Textures                                                                  */
 /* ------------------------------------------------------------------------- */
 
-JUNO_API JunoErrorCode JunoCreateTexture(JunoDevice* pDevice, const JunoTextureDesc* pDesc, const void* pInitialData, c_uint mRowPitch, JunoTexture** ppTexture);
+JUNO_API JunoErrorCode JunoCreateTexture(const JunoTextureCreateInfo* pCreateInfo, JunoTexture** ppTexture);
 JUNO_API void JunoDestroyTexture(JunoTexture* pTexture);
 JUNO_API JunoErrorCode JunoUpdateTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint mArraySlice, c_uint mMipLevel, const JunoRegion* pRegion, const void* pData, c_uint mRowPitch);
 JUNO_API JunoErrorCode JunoMapTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint mArraySlice, c_uint mMipLevel, JunoMapMode mMode, void** ppData, c_uint* pRowPitch);

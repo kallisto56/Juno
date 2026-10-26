@@ -38,14 +38,14 @@ static JunoErrorCode CreateBuffers(JunoSwapChain* pSC)
 	JunoTexture& back = pSC->mBackBuffer;
 	back.mTexture = buffer;
 	back.bOwnedBySwapChain = true;
-	back.mDesc.mWidth = td.Width;
-	back.mDesc.mHeight = td.Height;
-	back.mDesc.mMipLevels = 1;
-	back.mDesc.mArraySize = 1;
-	back.mDesc.mSampleCount = 1;
-	back.mDesc.mFormat = (JunoPixelFormat)td.Format;
-	back.mDesc.mUsage = JunoUsage_Default;
-	back.mDesc.mBindFlags = JunoBindFlags_RenderTarget;
+	back.mCreateInfo.mWidth = td.Width;
+	back.mCreateInfo.mHeight = td.Height;
+	back.mCreateInfo.mMipLevels = 1;
+	back.mCreateInfo.mArraySize = 1;
+	back.mCreateInfo.mSampleCount = 1;
+	back.mCreateInfo.mFormat = (JunoPixelFormat)td.Format;
+	back.mCreateInfo.mUsage = JunoUsage_Default;
+	back.mCreateInfo.mBindFlags = JunoBindFlags_RenderTarget;
 
 	if (pSC->mDesc.mDepthFormat != JunoPixelFormat_Unknown)
 	{
@@ -68,14 +68,14 @@ static JunoErrorCode CreateBuffers(JunoSwapChain* pSC)
 			return JunoFailHResult(JunoErrorCode_SwapChainCreationFailed, hr, "CreateDepthStencilView (depth buffer)");
 
 		depth.bOwnedBySwapChain = true;
-		depth.mDesc.mWidth = dd.Width;
-		depth.mDesc.mHeight = dd.Height;
-		depth.mDesc.mMipLevels = 1;
-		depth.mDesc.mArraySize = 1;
-		depth.mDesc.mSampleCount = 1;
-		depth.mDesc.mFormat = pSC->mDesc.mDepthFormat;
-		depth.mDesc.mUsage = JunoUsage_Default;
-		depth.mDesc.mBindFlags = JunoBindFlags_DepthStencil;
+		depth.mCreateInfo.mWidth = dd.Width;
+		depth.mCreateInfo.mHeight = dd.Height;
+		depth.mCreateInfo.mMipLevels = 1;
+		depth.mCreateInfo.mArraySize = 1;
+		depth.mCreateInfo.mSampleCount = 1;
+		depth.mCreateInfo.mFormat = pSC->mDesc.mDepthFormat;
+		depth.mCreateInfo.mUsage = JunoUsage_Default;
+		depth.mCreateInfo.mBindFlags = JunoBindFlags_DepthStencil;
 	}
 
 	return JunoErrorCode_Ok;
