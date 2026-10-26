@@ -9,9 +9,9 @@ using System.Interop;
 [CRepr]
 struct Buffer
 {
-	public void* mHandle;
-	public void* mSRV;
-	public void* mUAV;
+	public ComPtr<ID3D11Buffer> mHandle;
+	public ComPtr<ID3D11ShaderResourceView> mSRV;
+	public ComPtr<ID3D11UnorderedAccessView> mUAV;
 	public CreateInfo mCreateInfo;
 
 	[CRepr]
