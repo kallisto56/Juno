@@ -65,37 +65,37 @@ static class Juno
 	extern static public Texture* GetDepthBuffer(SwapChain* pSwapChain);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateBuffer")]
-	extern static public ErrorCode CreateBuffer(Device* pDevice, BufferDesc* pDesc, void* pInitialData, out GpuBuffer* ppBuffer);
+	extern static public ErrorCode CreateBuffer(Buffer.CreateInfo* pCreateInfo, out Buffer* ppBuffer);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDestroyBuffer")]
-	extern static public void DestroyBuffer(GpuBuffer* pBuffer);
+	extern static public void DestroyBuffer(Buffer* pBuffer);
 
 	[CallingConvention(.Cdecl), LinkName("JunoUpdateBuffer")]
-	extern static public ErrorCode UpdateBuffer(Device* pDevice, GpuBuffer* pBuffer, c_size mOffset, void* pData, c_size mSize);
+	extern static public ErrorCode UpdateBuffer(Device* pDevice, Buffer* pBuffer, c_size mOffset, void* pData, c_size mSize);
 
 	[CallingConvention(.Cdecl), LinkName("JunoMapBuffer")]
-	extern static public ErrorCode MapBuffer(Device* pDevice, GpuBuffer* pBuffer, MapMode mMode, out void* ppData);
+	extern static public ErrorCode MapBuffer(Device* pDevice, Buffer* pBuffer, MapMode mMode, out void* ppData);
 
 	[CallingConvention(.Cdecl), LinkName("JunoUnmapBuffer")]
-	extern static public void UnmapBuffer(Device* pDevice, GpuBuffer* pBuffer);
+	extern static public void UnmapBuffer(Device* pDevice, Buffer* pBuffer);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCopyBuffer")]
-	extern static public void CopyBuffer(Device* pDevice, GpuBuffer* pDst, GpuBuffer* pSrc);
+	extern static public void CopyBuffer(Device* pDevice, Buffer* pDst, Buffer* pSrc);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetVertexBuffers")]
-	extern static public void SetVertexBuffers(Device* pDevice, c_uint mStartSlot, c_uint mCount, GpuBuffer** ppBuffers, c_uint* pStrides, c_uint* pOffsets);
+	extern static public void SetVertexBuffers(Device* pDevice, c_uint mStartSlot, c_uint mCount, Buffer** ppBuffers, c_uint* pStrides, c_uint* pOffsets);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetIndexBuffer")]
-	extern static public void SetIndexBuffer(Device* pDevice, GpuBuffer* pBuffer, IndexFormat mFormat, c_uint mOffset);
+	extern static public void SetIndexBuffer(Device* pDevice, Buffer* pBuffer, IndexFormat mFormat, c_uint mOffset);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetConstantBuffers")]
-	extern static public void SetConstantBuffers(Device* pDevice, ShaderStage mStage, c_uint mStartSlot, c_uint mCount, GpuBuffer** ppBuffers);
+	extern static public void SetConstantBuffers(Device* pDevice, ShaderStage mStage, c_uint mStartSlot, c_uint mCount, Buffer** ppBuffers);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetBufferResources")]
-	extern static public void SetBufferResources(Device* pDevice, ShaderStage mStage, c_uint mStartSlot, c_uint mCount, GpuBuffer** ppBuffers);
+	extern static public void SetBufferResources(Device* pDevice, ShaderStage mStage, c_uint mStartSlot, c_uint mCount, Buffer** ppBuffers);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetUnorderedAccessBuffers")]
-	extern static public void SetUnorderedAccessBuffers(Device* pDevice, c_uint mStartSlot, c_uint mCount, GpuBuffer** ppBuffers);
+	extern static public void SetUnorderedAccessBuffers(Device* pDevice, c_uint mStartSlot, c_uint mCount, Buffer** ppBuffers);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateTexture")]
 	extern static public ErrorCode CreateTexture(Device* pDevice, TextureDesc* pDesc, void* pInitialData, c_uint mRowPitch, out Texture* ppTexture);

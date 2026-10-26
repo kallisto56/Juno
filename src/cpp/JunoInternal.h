@@ -100,10 +100,10 @@ struct JunoDevice
 
 struct JunoBuffer
 {
-	ComPtr<ID3D11Buffer> mBuffer;
+	ComPtr<ID3D11Buffer> mHandle;
 	ComPtr<ID3D11ShaderResourceView> mSRV;
 	ComPtr<ID3D11UnorderedAccessView> mUAV;
-	JunoBufferDesc mDesc = {};
+	JunoBufferCreateInfo mCreateInfo = {};
 };
 
 struct JunoTexture

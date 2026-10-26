@@ -314,15 +314,17 @@ typedef struct JunoSwapChainDesc
 	                                   Create the window with WS_EX_NOREDIRECTIONBITMAP. */
 } JunoSwapChainDesc;
 
-typedef struct JunoBufferDesc
+typedef struct JunoBufferCreateInfo
 {
+	JunoDevice* mDevice;
 	c_size mSize;               /* Bytes. Constant buffers must be a multiple of 16. */
 	c_uint mStride;             /* Required for structured buffers. */
 	JunoUsage mUsage;
 	c_uint mBindFlags;          /* JunoBindFlags */
 	c_uint mCpuAccessFlags;     /* JunoCpuAccessFlags */
 	c_bool bStructured;         /* Structured buffer. SRV/UAV are created according to mBindFlags. */
-} JunoBufferDesc;
+	void* mInitialData;         /* Initial data (optional, unless JunoUsage_Immutable is set) */
+} JunoBufferCreateInfo;
 
 typedef struct JunoTextureDesc
 {
@@ -470,7 +472,7 @@ JUNO_API JunoTexture* JunoGetDepthBuffer(JunoSwapChain* pSwapChain);    /* Owned
 /* Buffers                                                                   */
 /* ------------------------------------------------------------------------- */
 
-JUNO_API JunoErrorCode JunoCreateBuffer(JunoDevice* pDevice, const JunoBufferDesc* pDesc, const void* pInitialData, JunoBuffer** ppBuffer);
+JUNO_API JunoErrorCode JunoCreateBuffer(const JunoBufferCreateInfo* pCreateInfo, JunoBuffer** ppBuffer);
 JUNO_API void JunoDestroyBuffer(JunoBuffer* pBuffer);
 JUNO_API JunoErrorCode JunoUpdateBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer, c_size mOffset, const void* pData, c_size mSize);
 JUNO_API JunoErrorCode JunoMapBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer, JunoMapMode mMode, void** ppData);
