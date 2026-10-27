@@ -306,12 +306,12 @@ typedef enum JunoAddressMode
 /* Structs                                                                   */
 /* ------------------------------------------------------------------------- */
 
-typedef struct JunoDeviceDesc
+typedef struct JunoDeviceCreateInfo
 {
 	c_bool bDebug;          /* Enable the D3D11 debug layer if it is installed. */
 	c_bool bAllowWarp;      /* Fall back to the WARP software rasterizer. */
 	c_int mAdapterIndex;    /* >= 0 picks an adapter by DXGI index, < 0 uses the default hardware adapter. */
-} JunoDeviceDesc;
+} JunoDeviceCreateInfo;
 
 typedef struct JunoSwapChainDesc
 {
@@ -463,7 +463,7 @@ JUNO_API void JunoClearLastError(void);
 /* Device                                                                    */
 /* ------------------------------------------------------------------------- */
 
-JUNO_API JunoErrorCode JunoCreateDevice(const JunoDeviceDesc* pDesc, JunoDevice** ppDevice);
+JUNO_API JunoErrorCode JunoCreateDevice(const JunoDeviceCreateInfo* pDesc, JunoDevice** ppDevice);
 JUNO_API void JunoDestroyDevice(JunoDevice* pDevice);
 JUNO_API c_uint JunoGetFeatureLevel(JunoDevice* pDevice);
 JUNO_API c_bool JunoIsTearingSupported(JunoDevice* pDevice);

@@ -5,9 +5,6 @@ using System.Diagnostics;
 using System.Interop;
 
 
-// Native Juno.dll entry points. Call as Juno.Foo(...) with `using Juno;`.
-// "GpuBuffer" is the Beef name of JunoBuffer (Buffer would clash with System.Buffer).
-// Out parameters are called like: Juno.CreateDevice(&desc, var device);
 static class Juno
 {
 	[CallingConvention(.Cdecl), LinkName("JunoGetLastErrorMessage")]
@@ -23,7 +20,7 @@ static class Juno
 	extern static public void ClearLastError();
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateDevice")]
-	extern static public ErrorCode CreateDevice(DeviceDesc* pDesc, out Device* ppDevice);
+	extern static public ErrorCode CreateDevice(Device.CreateInfo* pCreateInfo, out Device* ppDevice);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDestroyDevice")]
 	extern static public void DestroyDevice(Device* pDevice);

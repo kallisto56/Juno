@@ -9,6 +9,9 @@ struct ComPtr<T> : int
 
 }
 
+typealias ID3D11Device = void*;
+typealias ID3D11DeviceContext = void*;
+typealias IDXGIFactory2 = void*;
 
 typealias ID3D11ShaderResourceView = void*;
 typealias ID3D11UnorderedAccessView = void*;

@@ -21,7 +21,7 @@ static HRESULT TryCreateDevice(IDXGIAdapter* pAdapter, D3D_DRIVER_TYPE driverTyp
 	return hr;
 }
 
-JUNO_API JunoErrorCode JunoCreateDevice(const JunoDeviceDesc* pDesc, JunoDevice** ppDevice)
+JUNO_API JunoErrorCode JunoCreateDevice(const JunoDeviceCreateInfo* pDesc, JunoDevice** ppDevice)
 {
 	JUNO_REQUIRE(pDesc != nullptr);
 	JUNO_REQUIRE(ppDevice != nullptr);
