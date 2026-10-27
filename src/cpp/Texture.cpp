@@ -56,13 +56,13 @@ JUNO_API JunoErrorCode JunoCreateTexture(const JunoTextureCreateInfo* pCreateInf
 	if (desc.mSampleCount > 1)
 		desc.mMipLevels = 1;
 
-	JunoBindFlags bind = desc.mBindFlags;
+	UINT bind = desc.mBindFlags;
 	UINT misc = 0;
 	if (desc.bGenerateMips)
 	{
 		JUNO_REQUIRE(desc.mUsage == JunoUsage_Default);
 		JUNO_REQUIRE(desc.mSampleCount == 1);
-		bind |= JunoBindFlags_RenderTarget | JunoBindFlags_ShaderResource;
+		bind |= D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 		misc |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
 	}
 	if (desc.bCubemap)

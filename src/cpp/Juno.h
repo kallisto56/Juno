@@ -346,8 +346,8 @@ typedef struct JunoTextureCreateInfo
 	c_uint mSampleCount;
 	JunoPixelFormat mFormat;
 	JunoUsage mUsage;
-	JunoBindFlags mBindFlags;
-	JunoCpuAccessFlags mCpuAccessFlags;
+	UINT mBindFlags;                       /* JunoBindFlags */
+	UINT mCpuAccessFlags;                  /* JunoCpuAccessFlags */
 	c_bool bGenerateMips;                  /* Adds RenderTarget + ShaderResource bind flags, generates mips after the initial upload. */
 	c_bool bCubemap;                       /* mArraySize is forced to 6. */
 	void* mInitialData;
