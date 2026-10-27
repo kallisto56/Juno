@@ -176,7 +176,7 @@ static class Juno
 	extern static public void SetShader(Device* pDevice, ShaderStage mStage, Shader* pShader);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateInputLayout")]
-	extern static public ErrorCode CreateInputLayout(Device* pDevice, InputElementDesc* pElements, c_uint mElementCount, Shader* pVertexShader, out InputLayout* ppLayout);
+	extern static public ErrorCode CreateInputLayout(Device* pDevice, InputElementDescription* pElements, c_uint mElementCount, Shader* pVertexShader, out InputLayout* ppLayout);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDestroyInputLayout")]
 	extern static public void DestroyInputLayout(InputLayout* pLayout);

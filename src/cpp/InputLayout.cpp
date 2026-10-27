@@ -2,7 +2,7 @@
 #include "JunoInternal.h"
 #include <new>
 
-JUNO_API JunoErrorCode JunoCreateInputLayout(JunoDevice* pDevice, const JunoInputElementDesc* pElements, c_uint mElementCount, JunoShader* pVertexShader, JunoInputLayout** ppLayout)
+JUNO_API JunoErrorCode JunoCreateInputLayout(JunoDevice* pDevice, const JunoInputElementDescription* pElements, c_uint mElementCount, JunoShader* pVertexShader, JunoInputLayout** ppLayout)
 {
 	JUNO_REQUIRE(pDevice != nullptr);
 	JUNO_REQUIRE(pElements != nullptr);

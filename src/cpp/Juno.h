@@ -391,7 +391,7 @@ typedef struct JunoSamplerDesc
 	float mMaxLOD;
 } JunoSamplerDesc;
 
-typedef struct JunoInputElementDesc
+typedef struct JunoInputElementDescription
 {
 	const c_char* mSemanticName;
 	c_uint mSemanticIndex;
@@ -400,7 +400,7 @@ typedef struct JunoInputElementDesc
 	c_uint mAlignedByteOffset;      /* JUNO_APPEND_ALIGNED_ELEMENT to append after the previous element. */
 	JunoInputClassification mInputSlotClass;
 	c_uint mInstanceDataStepRate;
-} JunoInputElementDesc;
+} JunoInputElementDescription;
 
 typedef struct JunoBlendDesc
 {
@@ -564,7 +564,7 @@ JUNO_API void JunoSetShader(JunoDevice* pDevice, JunoShaderStage mStage, JunoSha
 /* Input layout                                                              */
 /* ------------------------------------------------------------------------- */
 
-JUNO_API JunoErrorCode JunoCreateInputLayout(JunoDevice* pDevice, const JunoInputElementDesc* pElements, c_uint mElementCount, JunoShader* pVertexShader, JunoInputLayout** ppLayout);
+JUNO_API JunoErrorCode JunoCreateInputLayout(JunoDevice* pDevice, const JunoInputElementDescription* pElements, c_uint mElementCount, JunoShader* pVertexShader, JunoInputLayout** ppLayout);
 JUNO_API void JunoDestroyInputLayout(JunoInputLayout* pLayout);
 JUNO_API void JunoSetInputLayout(JunoDevice* pDevice, JunoInputLayout* pLayout);
 
