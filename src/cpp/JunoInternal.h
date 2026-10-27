@@ -137,7 +137,7 @@ struct JunoSwapChain
 	ComPtr<IDCompositionVisual> mDCompVisual;
 	JunoTexture mBackBuffer;
 	JunoTexture mDepthBuffer;
-	JunoSwapChainDesc mDesc = {};
+	JunoSwapChainCreateInfo mDesc = {};
 	UINT mFlags = 0;
 	bool bTearing = false;
 };

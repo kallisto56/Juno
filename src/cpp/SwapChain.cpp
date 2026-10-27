@@ -88,32 +88,32 @@ static JunoErrorCode FailAndDelete(JunoSwapChain* pSC, HRESULT hr, const char* p
 	return code;
 }
 
-JUNO_API JunoErrorCode JunoCreateSwapChain(JunoDevice* pDevice, const JunoSwapChainDesc* pDesc, JunoSwapChain** ppSwapChain)
+JUNO_API JunoErrorCode JunoCreateSwapChain(const JunoSwapChainCreateInfo* pCreateInfo, JunoSwapChain** ppSwapChain)
 {
-	JUNO_REQUIRE(pDevice != nullptr);
-	JUNO_REQUIRE(pDesc != nullptr);
+	JUNO_REQUIRE(pCreateInfo != nullptr);
+	JUNO_REQUIRE(pCreateInfo->mDevice != nullptr);
 	JUNO_REQUIRE(ppSwapChain != nullptr);
 	*ppSwapChain = nullptr;
-	JUNO_REQUIRE(pDesc->mWindow != nullptr);
+	JUNO_REQUIRE(pCreateInfo->mWindow != nullptr);
 
-	HWND hwnd = (HWND)pDesc->mWindow;
+	HWND hwnd = (HWND)pCreateInfo->mWindow;
 	JUNO_REQUIRE(IsWindow(hwnd));
 
 	JunoSwapChain* pSC = new (std::nothrow) JunoSwapChain();
 	JUNO_REQUIRE_ALLOC(pSC);
 
-	pSC->mDevice = pDevice;
+	pSC->mDevice = pCreateInfo->mDevice;
 	pSC->mHwnd = hwnd;
-	pSC->mDesc = *pDesc;
+	pSC->mDesc = *pCreateInfo;
 	if (pSC->mDesc.mFormat == JunoPixelFormat_Unknown)
 		pSC->mDesc.mFormat = JunoPixelFormat_B8G8R8A8_UNorm;
 	if (pSC->mDesc.mBufferCount < 2)
 		pSC->mDesc.mBufferCount = 2;
-	pSC->bTearing = pDesc->bAllowTearing && pDevice->bTearingSupported && !pDesc->bComposition;
+	pSC->bTearing = pCreateInfo->bAllowTearing && pCreateInfo->mDevice->bTearingSupported && !pCreateInfo->bComposition;
 	pSC->mFlags = pSC->bTearing ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0;
 
-	UINT width = pDesc->mWidth;
-	UINT height = pDesc->mHeight;
+	UINT width = pCreateInfo->mWidth;
+	UINT height = pCreateInfo->mHeight;
 	if (width == 0 || height == 0)
 		GetClientSize(hwnd, &width, &height);
 	if (width == 0) width = 1;
@@ -128,19 +128,19 @@ JUNO_API JunoErrorCode JunoCreateSwapChain(JunoDevice* pDevice, const JunoSwapCh
 	sd.BufferCount = pSC->mDesc.mBufferCount;
 	sd.Scaling = DXGI_SCALING_STRETCH;
 	sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	sd.AlphaMode = pDesc->bComposition ? DXGI_ALPHA_MODE_PREMULTIPLIED : DXGI_ALPHA_MODE_IGNORE;
+	sd.AlphaMode = pCreateInfo->bComposition ? DXGI_ALPHA_MODE_PREMULTIPLIED : DXGI_ALPHA_MODE_IGNORE;
 	sd.Flags = pSC->mFlags;
 
-	ID3D11Device* pNativeDevice = pDevice->mDevice.Get();
+	ID3D11Device* pNativeDevice = pCreateInfo->mDevice->mDevice.Get();
 	HRESULT hr;
 
-	if (pDesc->bComposition)
+	if (pCreateInfo->bComposition)
 	{
 		ComPtr<IDXGIDevice> dxgiDevice;
-		hr = pDevice->mDevice.As(&dxgiDevice);
+		hr = pCreateInfo->mDevice->mDevice.As(&dxgiDevice);
 		if (FAILED(hr)) return FailAndDelete(pSC, hr, "Querying IDXGIDevice");
 
-		hr = pDevice->mFactory->CreateSwapChainForComposition(pNativeDevice, &sd, nullptr, &pSC->mSwapChain);
+		hr = pCreateInfo->mDevice->mFactory->CreateSwapChainForComposition(pNativeDevice, &sd, nullptr, &pSC->mSwapChain);
 		if (FAILED(hr)) return FailAndDelete(pSC, hr, "IDXGIFactory2::CreateSwapChainForComposition");
 
 		hr = DCompositionCreateDevice(dxgiDevice.Get(), IID_PPV_ARGS(&pSC->mDCompDevice));
@@ -158,11 +158,11 @@ JUNO_API JunoErrorCode JunoCreateSwapChain(JunoDevice* pDevice, const JunoSwapCh
 	}
 	else
 	{
-		hr = pDevice->mFactory->CreateSwapChainForHwnd(pNativeDevice, hwnd, &sd, nullptr, nullptr, &pSC->mSwapChain);
+		hr = pCreateInfo->mDevice->mFactory->CreateSwapChainForHwnd(pNativeDevice, hwnd, &sd, nullptr, nullptr, &pSC->mSwapChain);
 		if (FAILED(hr)) return FailAndDelete(pSC, hr, "IDXGIFactory2::CreateSwapChainForHwnd");
 
 		// Alt+Enter fullscreen toggling is left to the application.
-		pDevice->mFactory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
+		pCreateInfo->mDevice->mFactory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
 	}
 
 	JunoErrorCode code = CreateBuffers(pSC);

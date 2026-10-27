@@ -44,7 +44,7 @@ static class Juno
 	extern static public void ClearState(Device* pDevice);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateSwapChain")]
-	extern static public ErrorCode CreateSwapChain(Device* pDevice, SwapChainDesc* pDesc, out SwapChain* ppSwapChain);
+	extern static public ErrorCode CreateSwapChain(SwapChain.CreateInfo* pCreateInfo, out SwapChain* ppSwapChain);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDestroySwapChain")]
 	extern static public void DestroySwapChain(SwapChain* pSwapChain);

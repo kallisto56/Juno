@@ -313,8 +313,9 @@ typedef struct JunoDeviceCreateInfo
 	c_int mAdapterIndex;    /* >= 0 picks an adapter by DXGI index, < 0 uses the default hardware adapter. */
 } JunoDeviceCreateInfo;
 
-typedef struct JunoSwapChainDesc
+typedef struct JunoSwapChainCreateInfo
 {
+	JunoDevice* mDevice;
 	void* mWindow;                  /* HWND. Required. */
 	c_uint mWidth;                  /* 0 = use client area. */
 	c_uint mHeight;                 /* 0 = use client area. */
@@ -324,7 +325,7 @@ typedef struct JunoSwapChainDesc
 	c_bool bAllowTearing;           /* Use tearing when presenting without vsync (if supported). */
 	c_bool bComposition;            /* DirectComposition swap chain with premultiplied alpha (transparent windows, Acrylic).
 	                                   Create the window with WS_EX_NOREDIRECTIONBITMAP. */
-} JunoSwapChainDesc;
+} JunoSwapChainCreateInfo;
 
 typedef struct JunoBufferCreateInfo
 {
@@ -476,7 +477,7 @@ JUNO_API void JunoClearState(JunoDevice* pDevice);
 /* Swap chain                                                                */
 /* ------------------------------------------------------------------------- */
 
-JUNO_API JunoErrorCode JunoCreateSwapChain(JunoDevice* pDevice, const JunoSwapChainDesc* pDesc, JunoSwapChain** ppSwapChain);
+JUNO_API JunoErrorCode JunoCreateSwapChain(const JunoSwapChainCreateInfo* pDesc, JunoSwapChain** ppSwapChain);
 JUNO_API void JunoDestroySwapChain(JunoSwapChain* pSwapChain);
 JUNO_API JunoErrorCode JunoResizeSwapChain(JunoSwapChain* pSwapChain, c_uint mWidth, c_uint mHeight); /* 0,0 = client area */
 JUNO_API JunoErrorCode JunoPresent(JunoSwapChain* pSwapChain, c_bool bVSync);

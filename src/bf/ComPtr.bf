@@ -13,6 +13,11 @@ typealias ID3D11Device = void*;
 typealias ID3D11DeviceContext = void*;
 typealias IDXGIFactory2 = void*;
 
+typealias IDXGISwapChain1 = void*;
+typealias IDCompositionDevice = void*;
+typealias IDCompositionTarget = void*;
+typealias IDCompositionVisual = void*;
+
 typealias ID3D11ShaderResourceView = void*;
 typealias ID3D11UnorderedAccessView = void*;
 
