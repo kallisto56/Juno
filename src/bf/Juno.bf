@@ -136,6 +136,15 @@ static class Juno
 	[CallingConvention(.Cdecl), LinkName("JunoSetUnorderedAccessTextures")]
 	extern static public void SetUnorderedAccessTextures(Device* pDevice, c_uint mStartSlot, c_uint mCount, Texture** ppTextures);
 
+	[CallingConvention(.Cdecl), LinkName("JunoLoadImage")]
+	extern static public ErrorCode LoadImage(void* pData, c_size mSize, PixelFormat mDesiredFormat, out JunoImage* ppImage);
+
+	[CallingConvention(.Cdecl), LinkName("JunoDestroyImage")]
+	extern static public void DestroyImage(JunoImage* pImage);
+
+	[CallingConvention(.Cdecl), LinkName("JunoCreateTextureFromImage")]
+	extern static public ErrorCode CreateTextureFromImage(Device* pDevice, JunoImage* pImage, c_bool bGenerateMips, out Texture* ppTexture);
+
 	[CallingConvention(.Cdecl), LinkName("JunoCreateSampler")]
 	extern static public ErrorCode CreateSampler(Device* pDevice, SamplerDesc* pDesc, out Sampler* ppSampler);
 

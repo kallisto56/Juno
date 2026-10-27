@@ -23,5 +23,6 @@ enum ErrorCode : c_int
 	case MapFailed;
 	case FileNotFound;
 	case Unsupported;
+	case ImageLoadFailed;
 	case Unknown;
 }

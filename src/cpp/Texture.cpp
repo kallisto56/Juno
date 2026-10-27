@@ -227,6 +227,31 @@ JUNO_API JunoErrorCode JunoCreateTexture(const JunoTextureCreateInfo* pCreateInf
 	return JunoErrorCode_Ok;
 }
 
+JUNO_API JunoErrorCode JunoCreateTextureFromImage(JunoDevice* pDevice, JunoImage* pImage, c_bool bGenerateMips, JunoTexture** ppTexture)
+{
+	JUNO_REQUIRE(pDevice != nullptr);
+	JUNO_REQUIRE(pImage != nullptr);
+	JUNO_REQUIRE(ppTexture != nullptr);
+
+	JunoTextureCreateInfo createInfo = {};
+	createInfo.mDevice = pDevice;
+	createInfo.mWidth = pImage->mWidth;
+	createInfo.mHeight = pImage->mHeight;
+	createInfo.mMipLevels = bGenerateMips ? 0 : 1;    // 0 = full chain, generated after the upload
+	createInfo.mArraySize = 1;
+	createInfo.mSampleCount = 1;
+	createInfo.mFormat = pImage->mFormat;
+	createInfo.mUsage = JunoUsage_Default;
+	createInfo.mBindFlags = JunoBindFlags_ShaderResource;
+	createInfo.mCpuAccessFlags = JunoCpuAccessFlags_None;
+	createInfo.bGenerateMips = bGenerateMips;
+	createInfo.bCubemap = false;
+	createInfo.mInitialData = pImage->mPixels;
+	createInfo.mRowPitch = pImage->mRowPitch;
+
+	return JunoCreateTexture(&createInfo, ppTexture);
+}
+
 JUNO_API void JunoDestroyTexture(JunoTexture* pTexture)
 {
 	if (pTexture == nullptr)

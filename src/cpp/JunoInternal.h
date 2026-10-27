@@ -117,6 +117,16 @@ struct JunoTexture
 	bool bOwnedBySwapChain = false;
 };
 
+struct JunoImage
+{
+	unsigned char* mPixels = nullptr;   // Allocated by stb_image, released with stbi_image_free.
+	c_uint mWidth = 0;
+	c_uint mHeight = 0;
+	c_uint mChannels = 0;
+	c_uint mRowPitch = 0;
+	JunoPixelFormat mFormat = JunoPixelFormat_Unknown;
+};
+
 struct JunoSwapChain
 {
 	JunoDevice* mDevice = nullptr;

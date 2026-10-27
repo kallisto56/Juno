@@ -19,6 +19,7 @@ typedef struct JunoDevice JunoDevice;
 typedef struct JunoSwapChain JunoSwapChain;
 typedef struct JunoBuffer JunoBuffer;
 typedef struct JunoTexture JunoTexture;
+typedef struct JunoImage JunoImage;
 typedef struct JunoSampler JunoSampler;
 typedef struct JunoBlob JunoBlob;
 typedef struct JunoShader JunoShader;
@@ -53,6 +54,7 @@ typedef enum JunoErrorCode
 	JunoErrorCode_MapFailed,
 	JunoErrorCode_FileNotFound,
 	JunoErrorCode_Unsupported,
+	JunoErrorCode_ImageLoadFailed,
 	JunoErrorCode_Unknown,
 } JunoErrorCode;
 
@@ -514,6 +516,28 @@ JUNO_API void JunoClearRenderTarget(JunoDevice* pDevice, JunoTexture* pTexture, 
 JUNO_API void JunoClearDepthStencil(JunoDevice* pDevice, JunoTexture* pTexture, c_uint mClearFlags, float mDepth, c_uchar mStencil);
 JUNO_API void JunoSetTextures(JunoDevice* pDevice, JunoShaderStage mStage, c_uint mStartSlot, c_uint mCount, JunoTexture* const* ppTextures);
 JUNO_API void JunoSetUnorderedAccessTextures(JunoDevice* pDevice, c_uint mStartSlot, c_uint mCount, JunoTexture* const* ppTextures); /* compute stage */
+
+/* ------------------------------------------------------------------------- */
+/* Images (CPU-side decoded pixels, PNG only)                                */
+/* ------------------------------------------------------------------------- */
+
+/*
+ * Decodes a PNG from memory (the caller keeps ownership of pData; it is not referenced after the call).
+ * mDesiredFormat selects the pixel layout the image is converted to while loading:
+ *   JunoPixelFormat_Unknown             Keep the source layout: 1 channel -> R8_UNorm, 2 -> R8G8_UNorm,
+ *                                       3 or 4 -> R8G8B8A8_UNorm (D3D11 has no 3-channel 8-bit format; alpha = 255).
+ *   JunoPixelFormat_R8_UNorm            1 channel. Colour sources are converted to luminance.
+ *   JunoPixelFormat_R8G8_UNorm          2 channels (grey + alpha).
+ *   JunoPixelFormat_R8G8B8A8_UNorm      4 channels. Grey sources are replicated into RGB, missing alpha = 255.
+ *   JunoPixelFormat_R8G8B8A8_UNorm_SRGB Same pixels as above, but the image is tagged sRGB so that the
+ *                                       texture created from it is sampled with sRGB -> linear conversion.
+ * Any other value fails with JunoErrorCode_Unsupported. 16-bit PNGs are reduced to 8 bits per channel.
+ */
+JUNO_API JunoErrorCode JunoLoadImage(const void* pData, c_size mSize, JunoPixelFormat mDesiredFormat, JunoImage** ppImage);
+JUNO_API void JunoDestroyImage(JunoImage* pImage);
+
+/* Convenience: creates an immutable-sized, shader-readable texture from the image (Default usage, ShaderResource bind). */
+JUNO_API JunoErrorCode JunoCreateTextureFromImage(JunoDevice* pDevice, JunoImage* pImage, c_bool bGenerateMips, JunoTexture** ppTexture);
 
 /* ------------------------------------------------------------------------- */
 /* Samplers                                                                  */

@@ -143,6 +143,7 @@
   <ItemGroup>
 	<ClInclude Include="src\cpp\pch.h" />
 	<ClInclude Include="src\cpp\framework.h" />
+	<ClInclude Include="src\cpp\stb_image.h" />
 	<ClInclude Include="src\cpp\Juno.h" />
 	<ClInclude Include="src\cpp\JunoInternal.h" />
 	<ClInclude Include="src\cpp\JunoTypes.h" />
@@ -162,6 +163,7 @@
     <ClCompile Include="src\cpp\Shader.cpp" />
     <ClCompile Include="src\cpp\SwapChain.cpp" />
     <ClCompile Include="src\cpp\Texture.cpp" />
+    <ClCompile Include="src\cpp\Image.cpp" />
     <ClCompile Include="src\cpp\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
