@@ -42,9 +42,9 @@ class Window
 		User32.SetProcessDpiAwarenessContext((void*)value); // DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2
 	}
 
-	public bool Create(WindowDesc desc)
+	public bool Create(CreateInfo createInfo)
 	{
-		HINSTANCE hInstance = Kernel32.GetModuleHandleW(null);
+		var hInstance = Kernel32.GetModuleHandleW(null);
 		if (!bClassRegistered)
 		{
 			if (!RegisterWindowClass(hInstance))
@@ -52,25 +52,23 @@ class Window
 			bClassRegistered = true;
 		}
 
-		WINDOW_STYLE style = desc.mStyle;
-		WINDOW_EX_STYLE exStyle = desc.mExStyle;
-		if (desc.bLayered)
-			exStyle |= .WS_EX_LAYERED;
+		WINDOW_STYLE style = createInfo.mStyle;
+		WINDOW_EX_STYLE exStyle = createInfo.mExStyle;
 
 		// desc.mWidth/mHeight describe the client area.
 		RECT rect = default;
-		rect.right = desc.mWidth;
-		rect.bottom = desc.mHeight;
+		rect.right = createInfo.mWidth;
+		rect.bottom = createInfo.mHeight;
 		User32.AdjustWindowRectEx(&rect, (DWORD)style, 0, (DWORD)exStyle);
 
 		let title = scope List<char16>();
-		Wide.Encode(desc.mTitle, title);
+		Wide.Encode(createInfo.mTitle, title);
 		let className = scope List<char16>();
 		Wide.Encode(cClassName, className);
 
 		// `this` travels through lpCreateParams and is stored in GWLP_USERDATA during WM_NCCREATE.
 		HWND hWnd = User32.CreateWindowExW((DWORD)exStyle, className.Ptr, title.Ptr, (DWORD)style,
-			desc.mX, desc.mY, rect.right - rect.left, rect.bottom - rect.top,
+			createInfo.mX, createInfo.mY, rect.right - rect.left, rect.bottom - rect.top,
 			null, null, hInstance, Internal.UnsafeCastToPtr(this));
 		if (hWnd == null)
 			return false;
@@ -83,10 +81,10 @@ class Window
 		mClientWidth = client.right - client.left;
 		mClientHeight = client.bottom - client.top;
 
-		if (desc.bLayered)
-			User32.SetLayeredWindowAttributes(hWnd, 0, desc.mOpacity, .LWA_ALPHA);
+		if (createInfo.mExStyle.HasFlag(.WS_EX_LAYERED))
+			User32.SetLayeredWindowAttributes(hWnd, 0, createInfo.mOpacity, .LWA_ALPHA);
 
-		if (desc.bVisible)
+		if (createInfo.bVisible)
 		{
 			User32.ShowWindow(hWnd, .SW_SHOW);
 			User32.UpdateWindow(hWnd);
@@ -353,5 +351,20 @@ class Window
 		default:
 			return false;
 		}
+	}
+
+	
+	[CRepr]
+	public struct CreateInfo
+	{
+		public StringView mTitle = "Juno";
+		public int32 mWidth = 1024;                 // Client area size.
+		public int32 mHeight = 768;
+		public int32 mX = int32.MinValue;           // int32.MinValue = CW_USEDEFAULT
+		public int32 mY = int32.MinValue;
+		public WINDOW_STYLE mStyle = .WS_OVERLAPPEDWINDOW;
+		public WINDOW_EX_STYLE mExStyle = .WS_EX_LEFT;
+		public uint8 mOpacity = 255;
+		public bool bVisible = true;
 	}
 }
