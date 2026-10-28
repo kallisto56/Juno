@@ -143,7 +143,7 @@ static class Juno
 	extern static public ErrorCode CreateTextureFromImage(Device* pDevice, JunoImage* pImage, c_bool bGenerateMips, out Texture* ppTexture);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateSampler")]
-	extern static public ErrorCode CreateSampler(Device* pDevice, SamplerDesc* pDesc, out Sampler* ppSampler);
+	extern static public ErrorCode CreateSampler(Sampler.CreateInfo* pCreateInfo, out Sampler* ppSampler);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDestroySampler")]
 	extern static public void DestroySampler(Sampler* pSampler);
