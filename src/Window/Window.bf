@@ -39,12 +39,12 @@ class Window
 	static public void EnableDpiAwareness()
 	{
 		var value = int(-4);
-		User32.SetProcessDpiAwarenessContext((void*)value); // DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2
+		NativeMethods.SetProcessDpiAwarenessContext((void*)value); // DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2
 	}
 
 	public bool Create(CreateInfo createInfo)
 	{
-		var hInstance = Kernel32.GetModuleHandleW(null);
+		var hInstance = NativeMethods.GetModuleHandleW(null);
 		if (!bClassRegistered)
 		{
 			if (!RegisterWindowClass(hInstance))
@@ -59,7 +59,7 @@ class Window
 		RECT rect = default;
 		rect.right = createInfo.mWidth;
 		rect.bottom = createInfo.mHeight;
-		User32.AdjustWindowRectEx(&rect, (DWORD)style, 0, (DWORD)exStyle);
+		NativeMethods.AdjustWindowRectEx(&rect, (DWORD)style, 0, (DWORD)exStyle);
 
 		let title = scope List<char16>();
 		Wide.Encode(createInfo.mTitle, title);
@@ -67,7 +67,7 @@ class Window
 		Wide.Encode(cClassName, className);
 
 		// `this` travels through lpCreateParams and is stored in GWLP_USERDATA during WM_NCCREATE.
-		HWND hWnd = User32.CreateWindowExW((DWORD)exStyle, className.Ptr, title.Ptr, (DWORD)style,
+		HWND hWnd = NativeMethods.CreateWindowExW((DWORD)exStyle, className.Ptr, title.Ptr, (DWORD)style,
 			createInfo.mX, createInfo.mY, rect.right - rect.left, rect.bottom - rect.top,
 			null, null, hInstance, Internal.UnsafeCastToPtr(this));
 		if (hWnd == null)
@@ -77,17 +77,17 @@ class Window
 		bIsOpen = true;
 
 		RECT client = default;
-		User32.GetClientRect(hWnd, &client);
+		NativeMethods.GetClientRect(hWnd, &client);
 		mClientWidth = client.right - client.left;
 		mClientHeight = client.bottom - client.top;
 
 		if (createInfo.mExStyle.HasFlag(.WS_EX_LAYERED))
-			User32.SetLayeredWindowAttributes(hWnd, 0, createInfo.mOpacity, .LWA_ALPHA);
+			NativeMethods.SetLayeredWindowAttributes(hWnd, 0, createInfo.mOpacity, .LWA_ALPHA);
 
 		if (createInfo.bVisible)
 		{
-			User32.ShowWindow(hWnd, .SW_SHOW);
-			User32.UpdateWindow(hWnd);
+			NativeMethods.ShowWindow(hWnd, .SW_SHOW);
+			NativeMethods.UpdateWindow(hWnd);
 		}
 		return true;
 	}
@@ -95,7 +95,7 @@ class Window
 	public void Destroy()
 	{
 		if (mHandle != null)
-			User32.DestroyWindow(mHandle); // WM_DESTROY clears mHandle / bIsOpen.
+			NativeMethods.DestroyWindow(mHandle); // WM_DESTROY clears mHandle / bIsOpen.
 
 		Icons.Destroy(mOwnedIconBig);
 		Icons.Destroy(mOwnedIconSmall);
@@ -107,10 +107,10 @@ class Window
 	static public void PumpMessages()
 	{
 		MSG msg = default;
-		while (User32.PeekMessageW(&msg, null, 0, 0, .PM_REMOVE) != 0)
+		while (NativeMethods.PeekMessageW(&msg, null, 0, 0, .PM_REMOVE) != 0)
 		{
-			User32.TranslateMessage(&msg);
-			User32.DispatchMessageW(&msg);
+			NativeMethods.TranslateMessage(&msg);
+			NativeMethods.DispatchMessageW(&msg);
 		}
 	}
 
@@ -124,7 +124,7 @@ class Window
 	{
 		let wide = scope List<char16>();
 		Wide.Encode(title, wide);
-		User32.SetWindowTextW(mHandle, wide.Ptr);
+		NativeMethods.SetWindowTextW(mHandle, wide.Ptr);
 	}
 
 	public bool IsKeyDown(KeyCode keyCode)
@@ -178,26 +178,26 @@ class Window
 	// Requires WindowDesc.bLayered (WS_EX_LAYERED).
 	public void SetOpacity(uint8 alpha)
 	{
-		User32.SetLayeredWindowAttributes(mHandle, 0, alpha, .LWA_ALPHA);
+		NativeMethods.SetLayeredWindowAttributes(mHandle, 0, alpha, .LWA_ALPHA);
 	}
 
 	public void SetDarkMode(bool enable)
 	{
 		BOOL value = enable ? 1 : 0;
-		Dwmapi.DwmSetWindowAttribute(mHandle, .DWMWA_USE_IMMERSIVE_DARK_MODE, &value, (DWORD)sizeof(BOOL));
+		NativeMethods.DwmSetWindowAttribute(mHandle, .DWMWA_USE_IMMERSIVE_DARK_MODE, &value, (DWORD)sizeof(BOOL));
 	}
 
 	// Windows 11 22H2+: Mica / Acrylic / Tabbed backdrops. Needs ExtendFrameIntoClientArea for client-area visibility.
 	public void SetSystemBackdrop(DWM_SYSTEMBACKDROP_TYPE type)
 	{
 		int32 value = (int32)type;
-		Dwmapi.DwmSetWindowAttribute(mHandle, .DWMWA_SYSTEMBACKDROP_TYPE, &value, (DWORD)sizeof(int32));
+		NativeMethods.DwmSetWindowAttribute(mHandle, .DWMWA_SYSTEMBACKDROP_TYPE, &value, (DWORD)sizeof(int32));
 	}
 
 	public void SetCornerPreference(DWM_WINDOW_CORNER_PREFERENCE preference)
 	{
 		int32 value = (int32)preference;
-		Dwmapi.DwmSetWindowAttribute(mHandle, .DWMWA_WINDOW_CORNER_PREFERENCE, &value, (DWORD)sizeof(int32));
+		NativeMethods.DwmSetWindowAttribute(mHandle, .DWMWA_WINDOW_CORNER_PREFERENCE, &value, (DWORD)sizeof(int32));
 	}
 
 	// Extends the DWM frame over the whole client area (-1 margins = "sheet of glass").
@@ -208,7 +208,7 @@ class Window
 		margins.cxRightWidth = -1;
 		margins.cyTopHeight = -1;
 		margins.cyBottomHeight = -1;
-		Dwmapi.DwmExtendFrameIntoClientArea(mHandle, &margins);
+		NativeMethods.DwmExtendFrameIntoClientArea(mHandle, &margins);
 	}
 
 	// Undocumented but widely used user32 export (Windows 10+). gradientColor is 0xAABBGGRR.
@@ -217,8 +217,8 @@ class Window
 		if (!sbCompositionAttributeLookedUp)
 		{
 			sbCompositionAttributeLookedUp = true;
-			HMODULE user32 = Kernel32.GetModuleHandleA("user32.dll");
-			void* proc = Kernel32.GetProcAddress(user32, "SetWindowCompositionAttribute");
+			HMODULE user32 = NativeMethods.GetModuleHandleA("user32.dll");
+			void* proc = NativeMethods.GetProcAddress(user32, "SetWindowCompositionAttribute");
 			sSetWindowCompositionAttribute = (SetWindowCompositionAttributeFn)proc;
 		}
 		if (sSetWindowCompositionAttribute == null)
@@ -263,9 +263,9 @@ class Window
 		wc.style = (UINT)(CLASS_STYLE.CS_HREDRAW | CLASS_STYLE.CS_VREDRAW | CLASS_STYLE.CS_OWNDC);
 		wc.lpfnWndProc = => WndProc;
 		wc.hInstance = hInstance;
-		wc.hCursor = User32.LoadCursorW(null, (char16*)(void*)(int)IDC_CURSOR.IDC_ARROW);
+		wc.hCursor = NativeMethods.LoadCursorW(null, (char16*)(void*)(int)IDC_CURSOR.IDC_ARROW);
 		wc.lpszClassName = className.Ptr;
-		return User32.RegisterClassExW(&wc) != 0;
+		return NativeMethods.RegisterClassExW(&wc) != 0;
 	}
 
 	[CallingConvention(.Stdcall)]
@@ -275,13 +275,13 @@ class Window
 		if (msg == (UINT)WM_MESSAGE.WM_NCCREATE)
 		{
 			let cs = (CREATESTRUCTW*)(void*)lParam;
-			User32.SetWindowLongPtrW(hWnd, .GWLP_USERDATA, (int)cs.lpCreateParams);
+			NativeMethods.SetWindowLongPtrW(hWnd, .GWLP_USERDATA, (int)cs.lpCreateParams);
 			window = (Window)Internal.UnsafeCastToObject(cs.lpCreateParams);
 			window.mHandle = hWnd;
 		}
 		else
 		{
-			void* ptr = (void*)User32.GetWindowLongPtrW(hWnd, .GWLP_USERDATA);
+			void* ptr = (void*)NativeMethods.GetWindowLongPtrW(hWnd, .GWLP_USERDATA);
 			if (ptr != null)
 				window = (Window)Internal.UnsafeCastToObject(ptr);
 		}
@@ -291,11 +291,11 @@ class Window
 			LRESULT result = 0;
 			bool bHandled = window.HandleMessage(msg, wParam, lParam, ref result);
 			if (msg == (UINT)WM_MESSAGE.WM_NCDESTROY)
-				User32.SetWindowLongPtrW(hWnd, .GWLP_USERDATA, 0);
+				NativeMethods.SetWindowLongPtrW(hWnd, .GWLP_USERDATA, 0);
 			if (bHandled)
 				return result;
 		}
-		return User32.DefWindowProcW(hWnd, msg, wParam, lParam);
+		return NativeMethods.DefWindowProcW(hWnd, msg, wParam, lParam);
 	}
 
 	bool HandleMessage(UINT msg, WPARAM wParam, LPARAM lParam, ref LRESULT result)
@@ -359,9 +359,9 @@ class Window
 	public struct CreateInfo
 	{
 		public StringView mTitle = "Juno";
-		public int32 mWidth = 1024;                 // Client area size.
+		public int32 mWidth = 1024;
 		public int32 mHeight = 768;
-		public int32 mX = int32.MinValue;           // int32.MinValue = CW_USEDEFAULT
+		public int32 mX = int32.MinValue;
 		public int32 mY = int32.MinValue;
 		public WINDOW_STYLE mStyle = .WS_OVERLAPPEDWINDOW;
 		public WINDOW_EX_STYLE mExStyle = .WS_EX_LEFT;

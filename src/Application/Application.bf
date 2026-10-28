@@ -397,7 +397,7 @@ class Application
 		case .Wait: id = .IDC_WAIT;
 		case .SizeAll: id = .IDC_SIZEALL;
 		}
-		User32.SetCursor(User32.LoadCursorW(null, (c_wchar*)(void*)id.Underlying));
+		NativeMethods.SetCursor(NativeMethods.LoadCursorW(null, (c_wchar*)(void*)id.Underlying));
 	}
 
 	// ---------------------------------------------------------------------------------------------------------

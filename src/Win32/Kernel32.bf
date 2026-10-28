@@ -3,7 +3,7 @@ namespace Juno;
 using System;
 using System.Interop;
 
-static class Kernel32
+extension NativeMethods
 {
 	[Import("KERNEL32.lib"), CLink, CallingConvention(.Stdcall)]
 	extern static public HMODULE GetModuleHandleW(LPCWSTR lpModuleName);

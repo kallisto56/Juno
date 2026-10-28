@@ -14,7 +14,7 @@ static class Icons
 		LOAD_IMAGE_FLAGS flags = .LR_LOADFROMFILE;
 		if (width == 0 && height == 0)
 			flags |= .LR_DEFAULTSIZE;
-		return User32.LoadImageW(null, wide.Ptr, .IMAGE_ICON, width, height, flags);
+		return NativeMethods.LoadImageW(null, wide.Ptr, .IMAGE_ICON, width, height, flags);
 	}
 
 	// Extracts the icon with the given index from any exe/dll/ico. Both sizes are returned, free each with Destroy.
@@ -25,7 +25,7 @@ static class Icons
 
 		let wide = scope List<char16>();
 		Wide.Encode(path, wide);
-		return Shell32.ExtractIconExW(wide.Ptr, index, &large, &small, 1) > 0;
+		return NativeMethods.ExtractIconExW(wide.Ptr, index, &large, &small, 1) > 0;
 	}
 
 	// Extracts the icon that is packed into the running executable (Beef embeds the project icon as the first icon resource).
@@ -35,24 +35,24 @@ static class Icons
 		small = null;
 
 		char16[1024] path = default;
-		DWORD length = Kernel32.GetModuleFileNameW(null, &path[0], 1024);
+		DWORD length = NativeMethods.GetModuleFileNameW(null, &path[0], 1024);
 		if (length == 0 || length >= 1024)
 			return false;
-		return Shell32.ExtractIconExW(&path[0], index, &large, &small, 1) > 0;
+		return NativeMethods.ExtractIconExW(&path[0], index, &large, &small, 1) > 0;
 	}
 
 	// Sets the big (taskbar / Alt+Tab) and small (title bar) icons of a window. The window does not take ownership.
 	static public void SetWindowIcon(HWND hWnd, HICON big, HICON small)
 	{
 		if (big != null)
-			User32.SendMessageW(hWnd, (UINT)WM_MESSAGE.WM_SETICON, (WPARAM)(uint)ICON_SIZE.ICON_BIG, (LPARAM)(int)big);
+			NativeMethods.SendMessageW(hWnd, (UINT)WM_MESSAGE.WM_SETICON, (WPARAM)(uint)ICON_SIZE.ICON_BIG, (LPARAM)(int)big);
 		if (small != null)
-			User32.SendMessageW(hWnd, (UINT)WM_MESSAGE.WM_SETICON, (WPARAM)(uint)ICON_SIZE.ICON_SMALL, (LPARAM)(int)small);
+			NativeMethods.SendMessageW(hWnd, (UINT)WM_MESSAGE.WM_SETICON, (WPARAM)(uint)ICON_SIZE.ICON_SMALL, (LPARAM)(int)small);
 	}
 
 	static public void Destroy(HICON icon)
 	{
 		if (icon != null)
-			User32.DestroyIcon(icon);
+			NativeMethods.DestroyIcon(icon);
 	}
 }

@@ -3,8 +3,54 @@ namespace Juno;
 using System;
 using System.Interop;
 
-static class User32
+extension NativeMethods
 {
+	[CRepr]
+	public struct MONITORINFOEXW
+	{
+	    public c_uint cbSize;
+	    public RECT rcMonitor;
+	    public RECT rcWork;
+	    public c_uint dwFlags;
+	    public c_wchar[32] szDevice; 
+	}
+
+	[AllowDuplicates]
+	public enum MonitorDefaults : c_uint
+	{
+	    MONITOR_DEFAULTTONULL = 0x00000000,
+	    MONITOR_DEFAULTTOPRIMARY = 0x00000001,
+	    MONITOR_DEFAULTTONEAREST = 0x00000002
+	}
+
+	public enum SystemMetric : c_int
+	{
+	    SM_CXSCREEN = 0,
+	    SM_CYSCREEN = 1
+	}
+
+	[AllowDuplicates]
+	public enum SetWindowPosFlags : c_uint
+	{
+	    SWP_NOSIZE = 0x0001,
+	    SWP_NOMOVE = 0x0002,
+	    SWP_NOZORDER = 0x0004,
+	    SWP_NOACTIVATE = 0x0010,
+	    SWP_SHOWWINDOW = 0x0040
+	}
+
+	[Import("USER32.dll"), CLink, CallingConvention(.Stdcall)]
+	public static extern c_int GetSystemMetrics(SystemMetric smIndex);
+
+	[Import("USER32.dll"), CLink, CallingConvention(.Stdcall)]
+	public static extern HWND MonitorFromWindow(HWND hwnd, MonitorDefaults dwFlags);
+
+	[Import("USER32.dll"), CLink, CallingConvention(.Stdcall)]
+	public static extern c_bool GetMonitorInfoW(HWND hMonitor, MONITORINFOEXW* lpmi);
+
+	[Import("USER32.dll"), CLink, CallingConvention(.Stdcall)]
+	public static extern c_bool GetWindowRect(HWND hWnd, out RECT lpRect);
+
 	[Import("USER32.lib"), CLink, CallingConvention(.Stdcall)]
 	extern static public ATOM RegisterClassExW(WNDCLASSEXW* lpWndClass);
 

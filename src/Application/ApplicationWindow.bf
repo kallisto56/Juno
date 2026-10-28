@@ -108,14 +108,14 @@ class ApplicationWindow : Window
 		if (down)
 		{
 			if (mButtonsDown == 0)
-				User32.SetCapture(mHandle);
+				NativeMethods.SetCapture(mHandle);
 			mButtonsDown++;
 		}
 		else if (mButtonsDown > 0)
 		{
 			mButtonsDown--;
 			if (mButtonsDown == 0)
-				User32.ReleaseCapture();
+				NativeMethods.ReleaseCapture();
 		}
 
 		let x = (float)(int16)(lParam & 0xFFFF);
