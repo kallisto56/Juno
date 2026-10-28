@@ -26,3 +26,5 @@ typealias ID3D11Buffer = void*;
 typealias ID3D11Texture2D = void*;
 typealias ID3D11RenderTargetView = void*;
 typealias ID3D11DepthStencilView = void*;
+
+typealias ID3D11SamplerState = void*;

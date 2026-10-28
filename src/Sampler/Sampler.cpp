@@ -2,32 +2,32 @@
 #include "./../Common/JunoInternal.h"
 #include <new>
 
-JUNO_API JunoErrorCode JunoCreateSampler(JunoDevice* pDevice, const JunoSamplerDesc* pDesc, JunoSampler** ppSampler)
+JUNO_API JunoErrorCode JunoCreateSampler(const JunoSamplerCreateInfo* pCreateInfo, JunoSampler** ppSampler)
 {
-	JUNO_REQUIRE(pDevice != nullptr);
-	JUNO_REQUIRE(pDesc != nullptr);
+	JUNO_REQUIRE(pCreateInfo != nullptr);
+	JUNO_REQUIRE(pCreateInfo->mDevice != nullptr);
 	JUNO_REQUIRE(ppSampler != nullptr);
 	*ppSampler = nullptr;
 
 	D3D11_SAMPLER_DESC sd = {};
-	sd.Filter = (D3D11_FILTER)pDesc->mFilter;
-	sd.AddressU = (D3D11_TEXTURE_ADDRESS_MODE)pDesc->mAddressU;
-	sd.AddressV = (D3D11_TEXTURE_ADDRESS_MODE)pDesc->mAddressV;
-	sd.AddressW = (D3D11_TEXTURE_ADDRESS_MODE)pDesc->mAddressW;
-	sd.MipLODBias = pDesc->mMipLODBias;
-	sd.MaxAnisotropy = pDesc->mMaxAnisotropy;
-	sd.ComparisonFunc = (D3D11_COMPARISON_FUNC)pDesc->mComparisonFunc;
-	sd.BorderColor[0] = pDesc->mBorderColorR;
-	sd.BorderColor[1] = pDesc->mBorderColorG;
-	sd.BorderColor[2] = pDesc->mBorderColorB;
-	sd.BorderColor[3] = pDesc->mBorderColorA;
-	sd.MinLOD = pDesc->mMinLOD;
-	sd.MaxLOD = pDesc->mMaxLOD;
+	sd.Filter = (D3D11_FILTER)pCreateInfo->mFilter;
+	sd.AddressU = (D3D11_TEXTURE_ADDRESS_MODE)pCreateInfo->mAddressU;
+	sd.AddressV = (D3D11_TEXTURE_ADDRESS_MODE)pCreateInfo->mAddressV;
+	sd.AddressW = (D3D11_TEXTURE_ADDRESS_MODE)pCreateInfo->mAddressW;
+	sd.MipLODBias = pCreateInfo->mMipLODBias;
+	sd.MaxAnisotropy = pCreateInfo->mMaxAnisotropy;
+	sd.ComparisonFunc = (D3D11_COMPARISON_FUNC)pCreateInfo->mComparisonFunc;
+	sd.BorderColor[0] = pCreateInfo->mBorderColorR;
+	sd.BorderColor[1] = pCreateInfo->mBorderColorG;
+	sd.BorderColor[2] = pCreateInfo->mBorderColorB;
+	sd.BorderColor[3] = pCreateInfo->mBorderColorA;
+	sd.MinLOD = pCreateInfo->mMinLOD;
+	sd.MaxLOD = pCreateInfo->mMaxLOD;
 
 	JunoSampler* pSampler = new (std::nothrow) JunoSampler();
 	JUNO_REQUIRE_ALLOC(pSampler);
 
-	HRESULT hr = pDevice->mDevice->CreateSamplerState(&sd, &pSampler->mState);
+	HRESULT hr = pCreateInfo->mDevice->mDevice->CreateSamplerState(&sd, &pSampler->mState);
 	if (FAILED(hr))
 	{
 		delete pSampler;
