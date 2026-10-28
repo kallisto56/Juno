@@ -1,6 +1,6 @@
 #pragma once
 
-#include "JunoTypes.h"
+#include "Interop.h"
 
 #ifdef __cplusplus
 #define JUNO_API extern "C" __declspec(dllexport)

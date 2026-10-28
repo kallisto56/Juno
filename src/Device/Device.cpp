@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "./../Common/JunoInternal.h"
-#include <new>
 
 static HRESULT TryCreateDevice(IDXGIAdapter* pAdapter, D3D_DRIVER_TYPE driverType, UINT flags, ID3D11Device** ppDevice, D3D_FEATURE_LEVEL* pLevel, ID3D11DeviceContext** ppContext)
 {

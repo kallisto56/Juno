@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "./../Common/JunoInternal.h"
-#include <new>
 
 static void ResetTexture(JunoTexture& texture)
 {

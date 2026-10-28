@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "./../Common/JunoInternal.h"
-#include <new>
 
 JUNO_API JunoErrorCode JunoCreateBlendState(JunoDevice* pDevice, const JunoBlendDesc* pDesc, JunoBlendState** ppState)
 {

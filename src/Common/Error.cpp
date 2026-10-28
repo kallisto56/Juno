@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "JunoInternal.h"
-#include <stdarg.h>
-#include <stdio.h>
 
 static thread_local JunoErrorCode sLastCode = JunoErrorCode_Ok;
 static thread_local HRESULT sLastHResult = S_OK;
