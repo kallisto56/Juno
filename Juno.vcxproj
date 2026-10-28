@@ -113,10 +113,9 @@
   </ItemGroup>
   <ItemGroup>
 	<ClInclude Include="src\Common\pch.h" />
-	<ClInclude Include="src\Common\framework.h" />
 	<ClInclude Include="src\Common\Juno.h" />
 	<ClInclude Include="src\Common\JunoInternal.h" />
-	<ClInclude Include="src\Common\JunoTypes.h" />
+	<ClInclude Include="src\Common\Interop.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Common\Error.cpp" />
