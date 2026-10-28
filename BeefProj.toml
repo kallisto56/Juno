@@ -1,5 +1,5 @@
 FileVersion = 1
-Dependencies = {corlib = "*", corlib = "*"}
+Dependencies = {corlib = "*", corlib = "*", FreeType = {Git = "https://github.com/kallisto56/FreeType"}}
 
 [Project]
 Name = "Juno"
