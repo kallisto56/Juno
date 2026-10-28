@@ -375,7 +375,9 @@ typedef struct JunoViewport
 	float mMaxDepth;
 } JunoViewport;
 
+typedef struct JunoSamplerCreateInfo
 {
+	JunoDevice* mDevice;
 	JunoFilter mFilter;
 	JunoAddressMode mAddressU;
 	JunoAddressMode mAddressV;
@@ -389,6 +391,7 @@ typedef struct JunoViewport
 	float mBorderColorA;
 	float mMinLOD;
 	float mMaxLOD;
+} JunoSamplerCreateInfo;
 
 typedef struct JunoInputElementDescription
 {
@@ -542,6 +545,7 @@ JUNO_API JunoErrorCode JunoCreateTextureFromImage(JunoDevice* pDevice, JunoImage
 /* Samplers                                                                  */
 /* ------------------------------------------------------------------------- */
 
+JUNO_API JunoErrorCode JunoCreateSampler(const JunoSamplerCreateInfo* pCreateInfo, JunoSampler** ppSampler);
 JUNO_API void JunoDestroySampler(JunoSampler* pSampler);
 JUNO_API void JunoSetSamplers(JunoDevice* pDevice, JunoShaderStage mStage, c_uint mStartSlot, c_uint mCount, JunoSampler* const* ppSamplers);
 
