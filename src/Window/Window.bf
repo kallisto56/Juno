@@ -84,10 +84,13 @@ class Window
 		if (createInfo.mExStyle.HasFlag(.WS_EX_LAYERED))
 			NativeMethods.SetLayeredWindowAttributes(hWnd, 0, createInfo.mOpacity, .LWA_ALPHA);
 
-		if (createInfo.bVisible)
+		if (createInfo.bIsVisible)
 		{
 			NativeMethods.ShowWindow(hWnd, .SW_SHOW);
 			NativeMethods.UpdateWindow(hWnd);
+
+			if (createInfo.bIsCentered)
+				this.SetPosition();
 		}
 		return true;
 	}
@@ -209,6 +212,41 @@ class Window
 		margins.cyTopHeight = -1;
 		margins.cyBottomHeight = -1;
 		NativeMethods.DwmExtendFrameIntoClientArea(mHandle, &margins);
+	}
+
+	public void SetPosition(int x = int.MinValue, int y = int.MinValue)
+	{
+		if (!NativeMethods.GetWindowRect(this.mHandle, var rect))
+		    return;
+
+		var x;
+		var y;
+
+		var windowWidth = rect.right - rect.left;
+		var windowHeight = rect.bottom - rect.top;
+		var hMonitor = NativeMethods.MonitorFromWindow(this.mHandle, .MONITOR_DEFAULTTONEAREST);
+		var mi = NativeMethods.MONITORINFOEXW();
+		mi.cbSize = sizeof(NativeMethods.MONITORINFOEXW);
+
+		var workWidth = default(LONG);
+		var workHeight = default(LONG);
+
+		if ((x == int.MinValue) || (y == int.MinValue))
+		{
+			if (NativeMethods.GetMonitorInfoW(hMonitor, &mi))
+			{
+			    workWidth = mi.rcWork.right - mi.rcWork.left;
+			    workHeight = mi.rcWork.bottom - mi.rcWork.top;
+			}
+		}
+
+		if (x == int.MinValue)
+			x = mi.rcWork.left + (workWidth - windowWidth) / 2;
+
+		if (y == int.MinValue)
+			y = mi.rcWork.top + (workHeight - windowHeight) / 2;
+
+		NativeMethods.SetWindowPos(this.mHandle, null, (.)x, (.)y, 0, 0, .SWP_NOSIZE | .SWP_NOZORDER);
 	}
 
 	// Undocumented but widely used user32 export (Windows 10+). gradientColor is 0xAABBGGRR.
@@ -366,6 +404,7 @@ class Window
 		public WINDOW_STYLE mStyle = .WS_OVERLAPPEDWINDOW;
 		public WINDOW_EX_STYLE mExStyle = .WS_EX_LEFT;
 		public uint8 mOpacity = 255;
-		public bool bVisible = true;
+		public bool bIsVisible = true;
+		public bool bIsCentered = true;
 	}
 }
