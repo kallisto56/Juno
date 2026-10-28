@@ -291,7 +291,8 @@ float4 PSMain(PSInput input) : SV_TARGET
 		// Samplers
 		for (int i < SamplerKind.cCount)
 		{
-			SamplerDesc sd = .();
+			Sampler.CreateInfo sd = .();
+			sd.mDevice = mDevice;
 			let kind = (SamplerKind)i;
 			let bPoint = (kind == .PointClamp || kind == .PointWrap);
 			let bWrap = (kind == .PointWrap || kind == .LinearWrap);
@@ -299,7 +300,7 @@ float4 PSMain(PSInput input) : SV_TARGET
 			sd.mAddressU = bWrap ? .Wrap : .Clamp;
 			sd.mAddressV = sd.mAddressU;
 			sd.mAddressW = sd.mAddressU;
-			if (!JunoLog.Check(Juno.CreateSampler(mDevice, &sd, var state), "CreateSampler"))
+			if (!JunoLog.Check(Juno.CreateSampler(&sd, var state), "CreateSampler"))
 				return false;
 			mSamplers[i] = state;
 		}
