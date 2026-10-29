@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "./../Common/JunoInternal.h"
+#include "JunoInternal.h"
 
 JUNO_API void JunoDraw(JunoDevice* pDevice, c_uint mVertexCount, c_uint mStartVertex)
 {

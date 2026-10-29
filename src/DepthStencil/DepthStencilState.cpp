@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "./../Common/JunoInternal.h"
+#include "JunoInternal.h"
 
 static D3D11_DEPTH_STENCILOP_DESC ToD3D(const JunoStencilOpDesc& op)
 {

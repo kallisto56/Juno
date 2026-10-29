@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "./../Common/JunoInternal.h"
+#include "JunoInternal.h"
 
 JUNO_API JunoErrorCode JunoCreateRasterizerState(JunoDevice* pDevice, const JunoRasterizerDesc* pDesc, JunoRasterizerState** ppState)
 {

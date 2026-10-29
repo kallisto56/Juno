@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "./../Common/JunoInternal.h"
+#include "JunoInternal.h"
 
 static JunoErrorCode CompileFailed(HRESULT hr, ID3DBlob* pErrors)
 {

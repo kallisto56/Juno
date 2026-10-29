@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "./../Common/JunoInternal.h"
+#include "JunoInternal.h"
 
 JUNO_API void JunoSetRenderTargets(JunoDevice* pDevice, c_uint mCount, JunoTexture* const* ppColorTargets, JunoTexture* pDepthTarget)
 {

@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "./../Common/JunoInternal.h"
+#include "JunoInternal.h"
 
 JUNO_API JunoErrorCode JunoCreateSampler(const JunoSamplerCreateInfo* pCreateInfo, JunoSampler** ppSampler)
 {

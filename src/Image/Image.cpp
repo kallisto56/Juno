@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "./../Common/JunoInternal.h"
+#include "JunoInternal.h"
 
 // Only the PNG decoder is compiled in, and file I/O is not needed: Beef hands us the bytes.
 #define STB_IMAGE_IMPLEMENTATION
