@@ -8,7 +8,7 @@ StartupObject = "Juno.Program"
 
 [Configs.Debug.Win64]
 LibPaths = ["$(ProjectDir)/dist/Juno.lib"]
-PreBuildCmds = ["\"$(ProjectDir)/bin/build.bat\" \"$(ProjectDir)/Juno.vcxproj\" /p:Configuration=Debug /p:Platform=X64 /p:OutDir=\"$(ProjectDir)/dist/\" /p:IntDir=\"$(BuildDir)/\" /v:m\""]
+PreBuildCmds = ["\"$(ProjectDir)/bin/build.bat\" \"$(ProjectDir)/Juno.vcxproj\" /p:Configuration=Debug /p:Platform=X64 /v:m\""]
 
 [[ProjectFolder.Items]]
 Type = "Source"
