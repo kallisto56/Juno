@@ -12,6 +12,7 @@ FreeType = {Git = "https://github.com/kallisto56/FreeType"}
 [Configs.Debug.Win64]
 LibPaths = ["$(ProjectDir)/dist/Juno.lib"]
 PreBuildCmds = ["\"$(ProjectDir)/bin/build.bat\" \"$(ProjectDir)/Juno.vcxproj\" /p:Configuration=Debug /p:Platform=X64 /v:m\""]
+CleanCmds = ["\"$(ProjectDir)/bin/build.bat\" \"$(ProjectDir)/Juno.vcxproj\" /p:Configuration=Debug /p:Platform=X64 /t:Clean"]
 
 [[ProjectFolder.Items]]
 Type = "Source"
