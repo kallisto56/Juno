@@ -20,10 +20,11 @@ static HRESULT TryCreateDevice(IDXGIAdapter* pAdapter, D3D_DRIVER_TYPE driverTyp
 	return hr;
 }
 
-JUNO_API JunoErrorCode JunoCreateDevice(const JunoDeviceCreateInfo* pDesc, JunoDevice** ppDevice)
+JUNO_API JunoErrorCode JunoCreateDevice(const JunoDeviceCreateInfo* pCreateInfo, JunoDevice** ppDevice)
 {
-	JUNO_REQUIRE(pDesc != nullptr);
-	JUNO_REQUIRE(ppDevice != nullptr);
+	JUNO_ASSERT(pCreateInfo != nullptr);
+	JUNO_ASSERT(pCreateInfo != nullptr);
+	JUNO_ASSERT(ppDevice != nullptr);
 	*ppDevice = nullptr;
 
 	ComPtr<IDXGIFactory1> factory1;
@@ -33,16 +34,16 @@ JUNO_API JunoErrorCode JunoCreateDevice(const JunoDeviceCreateInfo* pDesc, JunoD
 
 	ComPtr<IDXGIAdapter1> adapter;
 	D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
-	if (pDesc->mAdapterIndex >= 0)
+	if (pCreateInfo->mAdapterIndex >= 0)
 	{
-		hr = factory1->EnumAdapters1((UINT)pDesc->mAdapterIndex, &adapter);
+		hr = factory1->EnumAdapters1((UINT)pCreateInfo->mAdapterIndex, &adapter);
 		if (FAILED(hr))
-			return JunoSetError(JunoErrorCode_InvalidArgument, hr, "Adapter index %d does not exist", pDesc->mAdapterIndex);
+			return JunoSetError(JunoErrorCode_InvalidArgument, hr, "Adapter index %d does not exist", pCreateInfo->mAdapterIndex);
 		driverType = D3D_DRIVER_TYPE_UNKNOWN;
 	}
 
 	UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-	if (pDesc->bDebug)
+	if (pCreateInfo->bDebug)
 		flags |= D3D11_CREATE_DEVICE_DEBUG;
 
 	ComPtr<ID3D11Device> device;
@@ -56,7 +57,7 @@ JUNO_API JunoErrorCode JunoCreateDevice(const JunoDeviceCreateInfo* pDesc, JunoD
 		flags &= ~D3D11_CREATE_DEVICE_DEBUG;
 		hr = TryCreateDevice(adapter.Get(), driverType, flags, &device, &level, &context);
 	}
-	if (FAILED(hr) && pDesc->bAllowWarp)
+	if (FAILED(hr) && pCreateInfo->bAllowWarp)
 		hr = TryCreateDevice(nullptr, D3D_DRIVER_TYPE_WARP, flags, &device, &level, &context);
 	if (FAILED(hr))
 		return JunoFailHResult(JunoErrorCode_DeviceCreationFailed, hr, "D3D11CreateDevice");
@@ -108,36 +109,36 @@ JUNO_API void JunoDestroyDevice(JunoDevice* pDevice)
 
 JUNO_API c_uint JunoGetFeatureLevel(JunoDevice* pDevice)
 {
-	JUNO_REQUIRE_RETURN(pDevice != nullptr, 0);
+	JUNO_ASSERT(pDevice != nullptr);
 	return (c_uint)pDevice->mFeatureLevel;
 }
 
 JUNO_API c_bool JunoIsTearingSupported(JunoDevice* pDevice)
 {
-	JUNO_REQUIRE_RETURN(pDevice != nullptr, false);
+	JUNO_ASSERT(pDevice != nullptr);
 	return pDevice->bTearingSupported;
 }
 
 JUNO_API void* JunoGetNativeDevice(JunoDevice* pDevice)
 {
-	JUNO_REQUIRE_RETURN(pDevice != nullptr, nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
 	return pDevice->mDevice.Get();
 }
 
 JUNO_API void* JunoGetNativeContext(JunoDevice* pDevice)
 {
-	JUNO_REQUIRE_RETURN(pDevice != nullptr, nullptr);
+	JUNO_ASSERT(pDevice != nullptr, nullptr);
 	return pDevice->mContext.Get();
 }
 
 JUNO_API void JunoFlush(JunoDevice* pDevice)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
 	pDevice->mContext->Flush();
 }
 
 JUNO_API void JunoClearState(JunoDevice* pDevice)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
 	pDevice->mContext->ClearState();
 }
