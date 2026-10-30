@@ -1,10 +1,13 @@
 FileVersion = 1
-Dependencies = {corlib = "*", corlib = "*", FreeType = {Git = "https://github.com/kallisto56/FreeType"}}
 
 [Project]
 Name = "Juno"
 TargetType = "BeefLib"
 StartupObject = "Juno.Program"
+
+[Dependencies]
+corlib = "*"
+FreeType = {Git = "https://github.com/kallisto56/FreeType"}
 
 [Configs.Debug.Win64]
 LibPaths = ["$(ProjectDir)/dist/Juno.lib"]
