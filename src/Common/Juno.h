@@ -478,7 +478,7 @@ JUNO_API void JunoClearState(JunoDevice* pDevice);
 /* Swap chain                                                                */
 /* ------------------------------------------------------------------------- */
 
-JUNO_API JunoErrorCode JunoCreateSwapChain(const JunoSwapChainCreateInfo* pDesc, JunoSwapChain** ppSwapChain);
+JUNO_API JunoErrorCode JunoCreateSwapChain(const JunoSwapChainCreateInfo* pCreateInfo, JunoSwapChain** ppSwapChain);
 JUNO_API void JunoDestroySwapChain(JunoSwapChain* pSwapChain);
 JUNO_API JunoErrorCode JunoResizeSwapChain(JunoSwapChain* pSwapChain, c_uint mWidth, c_uint mHeight); /* 0,0 = client area */
 JUNO_API JunoErrorCode JunoPresent(JunoSwapChain* pSwapChain, c_bool bVSync);
