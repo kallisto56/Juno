@@ -261,17 +261,17 @@ JUNO_API void JunoDestroyTexture(JunoTexture* pTexture)
 	delete pTexture;
 }
 
-JUNO_API JunoErrorCode JunoUpdateTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint mArraySlice, c_uint mMipLevel, const JunoRegion* pRegion, const void* pData, c_uint mRowPitch)
+JUNO_API JunoErrorCode JunoUpdateTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint arraySlice, c_uint mipLevel, const JunoRegion* pRegion, const void* pData, c_uint rowPitch)
 {
 	JUNO_ASSERT(pDevice != nullptr);
 	JUNO_ASSERT(pTexture != nullptr);
 	JUNO_ASSERT(pData != nullptr);
-	JUNO_ASSERT(mRowPitch > 0);
+	JUNO_ASSERT(rowPitch > 0);
 	JUNO_ASSERT(pTexture->mCreateInfo.mUsage == JunoUsage_Default);
-	JUNO_ASSERT(mArraySlice < pTexture->mCreateInfo.mArraySize);
-	JUNO_ASSERT(mMipLevel < pTexture->mCreateInfo.mMipLevels);
+	JUNO_ASSERT(arraySlice < pTexture->mCreateInfo.mArraySize);
+	JUNO_ASSERT(mipLevel < pTexture->mCreateInfo.mMipLevels);
 
-	UINT subresource = D3D11CalcSubresource(mMipLevel, mArraySlice, pTexture->mCreateInfo.mMipLevels);
+	UINT subresource = D3D11CalcSubresource(mipLevel, arraySlice, pTexture->mCreateInfo.mMipLevels);
 
 	D3D11_BOX box = {};
 	const D3D11_BOX* pBox = nullptr;
@@ -286,11 +286,11 @@ JUNO_API JunoErrorCode JunoUpdateTexture(JunoDevice* pDevice, JunoTexture* pText
 		pBox = &box;
 	}
 
-	pDevice->mContext->UpdateSubresource(pTexture->mTexture.Get(), subresource, pBox, pData, mRowPitch, 0);
+	pDevice->mContext->UpdateSubresource(pTexture->mTexture.Get(), subresource, pBox, pData, rowPitch, 0);
 	return JunoErrorCode_Ok;
 }
 
-JUNO_API JunoErrorCode JunoMapTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint mArraySlice, c_uint mMipLevel, JunoMapMode mMode, void** ppData, c_uint* pRowPitch)
+JUNO_API JunoErrorCode JunoMapTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint arraySlice, c_uint mipLevel, JunoMapMode mode, void** ppData, c_uint* pRowPitch)
 {
 	JUNO_ASSERT(pDevice != nullptr);
 	JUNO_ASSERT(pTexture != nullptr);
@@ -299,9 +299,9 @@ JUNO_API JunoErrorCode JunoMapTexture(JunoDevice* pDevice, JunoTexture* pTexture
 	*ppData = nullptr;
 	*pRowPitch = 0;
 
-	UINT subresource = D3D11CalcSubresource(mMipLevel, mArraySlice, pTexture->mCreateInfo.mMipLevels);
+	UINT subresource = D3D11CalcSubresource(mipLevel, arraySlice, pTexture->mCreateInfo.mMipLevels);
 	D3D11_MAPPED_SUBRESOURCE mapped = {};
-	HRESULT hr = pDevice->mContext->Map(pTexture->mTexture.Get(), subresource, (D3D11_MAP)mMode, 0, &mapped);
+	HRESULT hr = pDevice->mContext->Map(pTexture->mTexture.Get(), subresource, (D3D11_MAP)mode, 0, &mapped);
 	if (FAILED(hr))
 		return JunoFailHResult(JunoErrorCode_MapFailed, hr, "ID3D11DeviceContext::Map (texture)");
 
@@ -310,11 +310,11 @@ JUNO_API JunoErrorCode JunoMapTexture(JunoDevice* pDevice, JunoTexture* pTexture
 	return JunoErrorCode_Ok;
 }
 
-JUNO_API void JunoUnmapTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint mArraySlice, c_uint mMipLevel)
+JUNO_API void JunoUnmapTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint arraySlice, c_uint mipLevel)
 {
 	JUNO_ASSERT(pDevice != nullptr);
 	JUNO_ASSERT(pTexture != nullptr);
-	UINT subresource = D3D11CalcSubresource(mMipLevel, mArraySlice, pTexture->mCreateInfo.mMipLevels);
+	UINT subresource = D3D11CalcSubresource(mipLevel, arraySlice, pTexture->mCreateInfo.mMipLevels);
 	pDevice->mContext->Unmap(pTexture->mTexture.Get(), subresource);
 }
 
@@ -349,45 +349,45 @@ JUNO_API void JunoGetTextureSize(JunoTexture* pTexture, c_uint* pWidth, c_uint* 
 	if (pHeight) *pHeight = pTexture->mCreateInfo.mHeight;
 }
 
-JUNO_API void JunoClearRenderTarget(JunoDevice* pDevice, JunoTexture* pTexture, float mR, float mG, float mB, float mA)
+JUNO_API void JunoClearRenderTarget(JunoDevice* pDevice, JunoTexture* pTexture, float r, float g, float b, float a)
 {
 	JUNO_ASSERT(pDevice != nullptr);
 	JUNO_ASSERT(pTexture != nullptr);
 	JUNO_ASSERT(pTexture->mRTV != nullptr);
-	const float color[4] = { mR, mG, mB, mA };
+	const float color[4] = { r, g, b, a };
 	pDevice->mContext->ClearRenderTargetView(pTexture->mRTV.Get(), color);
 }
 
-JUNO_API void JunoClearDepthStencil(JunoDevice* pDevice, JunoTexture* pTexture, c_uint mClearFlags, float mDepth, c_uchar mStencil)
+JUNO_API void JunoClearDepthStencil(JunoDevice* pDevice, JunoTexture* pTexture, c_uint clearFlags, float depth, c_uchar stencil)
 {
 	JUNO_ASSERT(pDevice != nullptr);
 	JUNO_ASSERT(pTexture != nullptr);
 	JUNO_ASSERT(pTexture->mDSV != nullptr);
-	pDevice->mContext->ClearDepthStencilView(pTexture->mDSV.Get(), mClearFlags, mDepth, mStencil);
+	pDevice->mContext->ClearDepthStencilView(pTexture->mDSV.Get(), clearFlags, depth, stencil);
 }
 
-JUNO_API void JunoSetTextures(JunoDevice* pDevice, JunoShaderStage mStage, c_uint mStartSlot, c_uint mCount, JunoTexture* const* ppTextures)
+JUNO_API void JunoSetTextures(JunoDevice* pDevice, JunoShaderStage stage, c_uint startSlot, c_uint count, JunoTexture* const* ppTextures)
 {
 	JUNO_ASSERT(pDevice != nullptr);
-	JUNO_ASSERT(mStartSlot + mCount <= JUNO_MAX_SRV_SLOTS);
-	JUNO_ASSERT(mCount == 0 || ppTextures != nullptr);
+	JUNO_ASSERT(startSlot + count <= JUNO_MAX_SRV_SLOTS);
+	JUNO_ASSERT(count == 0 || ppTextures != nullptr);
 
 	ID3D11ShaderResourceView* views[JUNO_MAX_SRV_SLOTS] = {};
-	for (c_uint i = 0; i < mCount; ++i)
+	for (c_uint i = 0; i < count; ++i)
 		views[i] = ppTextures[i] ? ppTextures[i]->mSRV.Get() : nullptr;
 
-	JunoBindShaderResources(pDevice->mContext.Get(), mStage, mStartSlot, mCount, views);
+	JunoBindShaderResources(pDevice->mContext.Get(), stage, startSlot, count, views);
 }
 
-JUNO_API void JunoSetUnorderedAccessTextures(JunoDevice* pDevice, c_uint mStartSlot, c_uint mCount, JunoTexture* const* ppTextures)
+JUNO_API void JunoSetUnorderedAccessTextures(JunoDevice* pDevice, c_uint startSlot, c_uint count, JunoTexture* const* ppTextures)
 {
 	JUNO_ASSERT(pDevice != nullptr);
-	JUNO_ASSERT(mStartSlot + mCount <= JUNO_MAX_UAV_SLOTS);
-	JUNO_ASSERT(mCount == 0 || ppTextures != nullptr);
+	JUNO_ASSERT(startSlot + count <= JUNO_MAX_UAV_SLOTS);
+	JUNO_ASSERT(count == 0 || ppTextures != nullptr);
 
 	ID3D11UnorderedAccessView* views[JUNO_MAX_UAV_SLOTS] = {};
-	for (c_uint i = 0; i < mCount; ++i)
+	for (c_uint i = 0; i < count; ++i)
 		views[i] = ppTextures[i] ? ppTextures[i]->mUAV.Get() : nullptr;
 
-	pDevice->mContext->CSSetUnorderedAccessViews(mStartSlot, mCount, views, nullptr);
+	pDevice->mContext->CSSetUnorderedAccessViews(startSlot, count, views, nullptr);
 }

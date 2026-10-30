@@ -47,8 +47,8 @@ JUNO_API void JunoDestroyDepthStencilState(JunoDepthStencilState* pState)
 	delete pState;
 }
 
-JUNO_API void JunoSetDepthStencilState(JunoDevice* pDevice, JunoDepthStencilState* pState, c_uint mStencilRef)
+JUNO_API void JunoSetDepthStencilState(JunoDevice* pDevice, JunoDepthStencilState* pState, c_uint stencilRef)
 {
 	JUNO_ASSERT(pDevice != nullptr);
-	pDevice->mContext->OMSetDepthStencilState(pState ? pState->mState.Get() : nullptr, mStencilRef);
+	pDevice->mContext->OMSetDepthStencilState(pState ? pState->mState.Get() : nullptr, stencilRef);
 }

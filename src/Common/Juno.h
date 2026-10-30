@@ -508,7 +508,7 @@ JUNO_API void JunoClearState(JunoDevice* pDevice);
 
 JUNO_API JunoErrorCode JunoCreateSwapChain(const JunoSwapChainCreateInfo* pCreateInfo, JunoSwapChain** ppSwapChain);
 JUNO_API void JunoDestroySwapChain(JunoSwapChain* pSwapChain);
-JUNO_API JunoErrorCode JunoResizeSwapChain(JunoSwapChain* pSwapChain, c_uint mWidth, c_uint mHeight); /* 0,0 = client area */
+JUNO_API JunoErrorCode JunoResizeSwapChain(JunoSwapChain* pSwapChain, c_uint width, c_uint height); /* 0,0 = client area */
 JUNO_API JunoErrorCode JunoPresent(JunoSwapChain* pSwapChain, c_bool bVSync);
 JUNO_API JunoTexture* JunoGetBackBuffer(JunoSwapChain* pSwapChain);     /* Owned by the swap chain. Do not destroy. */
 JUNO_API JunoTexture* JunoGetDepthBuffer(JunoSwapChain* pSwapChain);    /* Owned by the swap chain. May be NULL. */
@@ -519,15 +519,15 @@ JUNO_API JunoTexture* JunoGetDepthBuffer(JunoSwapChain* pSwapChain);    /* Owned
 
 JUNO_API JunoErrorCode JunoCreateBuffer(const JunoBufferCreateInfo* pCreateInfo, JunoBuffer** ppBuffer);
 JUNO_API void JunoDestroyBuffer(JunoBuffer* pBuffer);
-JUNO_API JunoErrorCode JunoUpdateBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer, c_size mOffset, const void* pData, c_size mSize);
-JUNO_API JunoErrorCode JunoMapBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer, JunoMapMode mMode, void** ppData);
+JUNO_API JunoErrorCode JunoUpdateBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer, c_size offset, const void* pData, c_size size);
+JUNO_API JunoErrorCode JunoMapBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer, JunoMapMode mode, void** ppData);
 JUNO_API void JunoUnmapBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer);
 JUNO_API void JunoCopyBuffer(JunoDevice* pDevice, JunoBuffer* pDst, JunoBuffer* pSrc);
-JUNO_API void JunoSetVertexBuffers(JunoDevice* pDevice, c_uint mStartSlot, c_uint mCount, JunoBuffer* const* ppBuffers, const c_uint* pStrides, const c_uint* pOffsets);
-JUNO_API void JunoSetIndexBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer, JunoIndexFormat mFormat, c_uint mOffset);
-JUNO_API void JunoSetConstantBuffers(JunoDevice* pDevice, JunoShaderStage mStage, c_uint mStartSlot, c_uint mCount, JunoBuffer* const* ppBuffers);
-JUNO_API void JunoSetBufferResources(JunoDevice* pDevice, JunoShaderStage mStage, c_uint mStartSlot, c_uint mCount, JunoBuffer* const* ppBuffers);
-JUNO_API void JunoSetUnorderedAccessBuffers(JunoDevice* pDevice, c_uint mStartSlot, c_uint mCount, JunoBuffer* const* ppBuffers); /* compute stage */
+JUNO_API void JunoSetVertexBuffers(JunoDevice* pDevice, c_uint startSlot, c_uint count, JunoBuffer* const* ppBuffers, const c_uint* pStrides, const c_uint* pOffsets);
+JUNO_API void JunoSetIndexBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer, JunoIndexFormat format, c_uint offset);
+JUNO_API void JunoSetConstantBuffers(JunoDevice* pDevice, JunoShaderStage stage, c_uint startSlot, c_uint count, JunoBuffer* const* ppBuffers);
+JUNO_API void JunoSetBufferResources(JunoDevice* pDevice, JunoShaderStage stage, c_uint startSlot, c_uint count, JunoBuffer* const* ppBuffers);
+JUNO_API void JunoSetUnorderedAccessBuffers(JunoDevice* pDevice, c_uint startSlot, c_uint count, JunoBuffer* const* ppBuffers); /* compute stage */
 
 /* ------------------------------------------------------------------------- */
 /* Textures                                                                  */
@@ -535,17 +535,17 @@ JUNO_API void JunoSetUnorderedAccessBuffers(JunoDevice* pDevice, c_uint mStartSl
 
 JUNO_API JunoErrorCode JunoCreateTexture(const JunoTextureCreateInfo* pCreateInfo, JunoTexture** ppTexture);
 JUNO_API void JunoDestroyTexture(JunoTexture* pTexture);
-JUNO_API JunoErrorCode JunoUpdateTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint mArraySlice, c_uint mMipLevel, const JunoRegion* pRegion, const void* pData, c_uint mRowPitch);
-JUNO_API JunoErrorCode JunoMapTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint mArraySlice, c_uint mMipLevel, JunoMapMode mMode, void** ppData, c_uint* pRowPitch);
-JUNO_API void JunoUnmapTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint mArraySlice, c_uint mMipLevel);
+JUNO_API JunoErrorCode JunoUpdateTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint arraySlice, c_uint mipLevel, const JunoRegion* pRegion, const void* pData, c_uint rowPitch);
+JUNO_API JunoErrorCode JunoMapTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint arraySlice, c_uint mipLevel, JunoMapMode mode, void** ppData, c_uint* pRowPitch);
+JUNO_API void JunoUnmapTexture(JunoDevice* pDevice, JunoTexture* pTexture, c_uint arraySlice, c_uint mipLevel);
 JUNO_API void JunoGenerateMips(JunoDevice* pDevice, JunoTexture* pTexture);
 JUNO_API void JunoCopyTexture(JunoDevice* pDevice, JunoTexture* pDst, JunoTexture* pSrc);
 JUNO_API void JunoResolveTexture(JunoDevice* pDevice, JunoTexture* pDst, JunoTexture* pSrc);
 JUNO_API void JunoGetTextureSize(JunoTexture* pTexture, c_uint* pWidth, c_uint* pHeight);
-JUNO_API void JunoClearRenderTarget(JunoDevice* pDevice, JunoTexture* pTexture, float mR, float mG, float mB, float mA);
-JUNO_API void JunoClearDepthStencil(JunoDevice* pDevice, JunoTexture* pTexture, c_uint mClearFlags, float mDepth, c_uchar mStencil);
-JUNO_API void JunoSetTextures(JunoDevice* pDevice, JunoShaderStage mStage, c_uint mStartSlot, c_uint mCount, JunoTexture* const* ppTextures);
-JUNO_API void JunoSetUnorderedAccessTextures(JunoDevice* pDevice, c_uint mStartSlot, c_uint mCount, JunoTexture* const* ppTextures); /* compute stage */
+JUNO_API void JunoClearRenderTarget(JunoDevice* pDevice, JunoTexture* pTexture, float r, float g, float b, float a);
+JUNO_API void JunoClearDepthStencil(JunoDevice* pDevice, JunoTexture* pTexture, c_uint clearFlags, float depth, c_uchar stencil);
+JUNO_API void JunoSetTextures(JunoDevice* pDevice, JunoShaderStage stage, c_uint startSlot, c_uint count, JunoTexture* const* ppTextures);
+JUNO_API void JunoSetUnorderedAccessTextures(JunoDevice* pDevice, c_uint startSlot, c_uint count, JunoTexture* const* ppTextures); /* compute stage */
 
 /* ------------------------------------------------------------------------- */
 /* Images (CPU-side decoded pixels, PNG only)                                */
@@ -563,7 +563,7 @@ JUNO_API void JunoSetUnorderedAccessTextures(JunoDevice* pDevice, c_uint mStartS
  *                                       texture created from it is sampled with sRGB -> linear conversion.
  * Any other value fails with JunoErrorCode_Unsupported. 16-bit PNGs are reduced to 8 bits per channel.
  */
-JUNO_API JunoErrorCode JunoLoadImage(const void* pData, c_size mSize, JunoPixelFormat mDesiredFormat, JunoImage** ppImage);
+JUNO_API JunoErrorCode JunoLoadImage(const void* pData, c_size size, JunoPixelFormat desiredFormat, JunoImage** ppImage);
 JUNO_API void JunoDestroyImage(JunoImage* pImage);
 
 /* Convenience: creates an immutable-sized, shader-readable texture from the image (Default usage, ShaderResource bind). */
@@ -575,7 +575,7 @@ JUNO_API JunoErrorCode JunoCreateTextureFromImage(JunoDevice* pDevice, JunoImage
 
 JUNO_API JunoErrorCode JunoCreateSampler(const JunoSamplerCreateInfo* pCreateInfo, JunoSampler** ppSampler);
 JUNO_API void JunoDestroySampler(JunoSampler* pSampler);
-JUNO_API void JunoSetSamplers(JunoDevice* pDevice, JunoShaderStage mStage, c_uint mStartSlot, c_uint mCount, JunoSampler* const* ppSamplers);
+JUNO_API void JunoSetSamplers(JunoDevice* pDevice, JunoShaderStage stage, c_uint startSlot, c_uint count, JunoSampler* const* ppSamplers);
 
 /* ------------------------------------------------------------------------- */
 /* Shaders                                                                   */
@@ -589,13 +589,13 @@ JUNO_API void JunoDestroyBlob(JunoBlob* pBlob);
 JUNO_API JunoErrorCode JunoCreateShader(JunoShaderCreateInfo* pCreateInfo, JunoShader** ppShader);
 JUNO_API void JunoDestroyShader(JunoShader* pShader);
 JUNO_API void JunoSetShader(JunoDevice* pDevice, JunoShader* pShader);
-JUNO_API void JunoUnsetShader(JunoDevice* pDevice, JunoShaderStage mStage);
+JUNO_API void JunoUnsetShader(JunoDevice* pDevice, JunoShaderStage stage);
 
 /* ------------------------------------------------------------------------- */
 /* Input layout                                                              */
 /* ------------------------------------------------------------------------- */
 
-JUNO_API JunoErrorCode JunoCreateInputLayout(JunoDevice* pDevice, const JunoInputElementDescription* pElements, c_uint mElementCount, const void* pVertexShaderBytecode, c_size mVertexShaderBytecodeSize, JunoInputLayout** ppLayout);
+JUNO_API JunoErrorCode JunoCreateInputLayout(JunoDevice* pDevice, const JunoInputElementDescription* pElements, c_uint elementCount, const void* pVertexShaderBytecode, c_size vertexShaderBytecodeSize, JunoInputLayout** ppLayout);
 JUNO_API void JunoDestroyInputLayout(JunoInputLayout* pLayout);
 JUNO_API void JunoSetInputLayout(JunoDevice* pDevice, JunoInputLayout* pLayout);
 
@@ -605,7 +605,7 @@ JUNO_API void JunoSetInputLayout(JunoDevice* pDevice, JunoInputLayout* pLayout);
 
 JUNO_API JunoErrorCode JunoCreateBlendState(JunoDevice* pDevice, const JunoBlendDesc* pDesc, JunoBlendState** ppState);
 JUNO_API void JunoDestroyBlendState(JunoBlendState* pState);
-JUNO_API void JunoSetBlendState(JunoDevice* pDevice, JunoBlendState* pState, const float* pBlendFactor, c_uint mSampleMask); /* pBlendFactor NULL = {1,1,1,1} */
+JUNO_API void JunoSetBlendState(JunoDevice* pDevice, JunoBlendState* pState, const float* pBlendFactor, c_uint sampleMask); /* pBlendFactor NULL = {1,1,1,1} */
 
 JUNO_API JunoErrorCode JunoCreateRasterizerState(JunoDevice* pDevice, const JunoRasterizerDesc* pDesc, JunoRasterizerState** ppState);
 JUNO_API void JunoDestroyRasterizerState(JunoRasterizerState* pState);
@@ -613,22 +613,22 @@ JUNO_API void JunoSetRasterizerState(JunoDevice* pDevice, JunoRasterizerState* p
 
 JUNO_API JunoErrorCode JunoCreateDepthStencilState(JunoDevice* pDevice, const JunoDepthStencilDesc* pDesc, JunoDepthStencilState** ppState);
 JUNO_API void JunoDestroyDepthStencilState(JunoDepthStencilState* pState);
-JUNO_API void JunoSetDepthStencilState(JunoDevice* pDevice, JunoDepthStencilState* pState, c_uint mStencilRef);
+JUNO_API void JunoSetDepthStencilState(JunoDevice* pDevice, JunoDepthStencilState* pState, c_uint stencilRef);
 
 /* ------------------------------------------------------------------------- */
 /* Pipeline / drawing                                                        */
 /* ------------------------------------------------------------------------- */
 
-JUNO_API void JunoSetRenderTargets(JunoDevice* pDevice, c_uint mCount, JunoTexture* const* ppColorTargets, JunoTexture* pDepthTarget);
-JUNO_API void JunoSetViewports(JunoDevice* pDevice, c_uint mCount, const JunoViewport* pViewports);
-JUNO_API void JunoSetScissorRects(JunoDevice* pDevice, c_uint mCount, const JunoRegion* pRects);
-JUNO_API void JunoSetPrimitiveTopology(JunoDevice* pDevice, JunoPrimitiveTopology mTopology);
+JUNO_API void JunoSetRenderTargets(JunoDevice* pDevice, c_uint count, JunoTexture* const* ppColorTargets, JunoTexture* pDepthTarget);
+JUNO_API void JunoSetViewports(JunoDevice* pDevice, c_uint count, const JunoViewport* pViewports);
+JUNO_API void JunoSetScissorRects(JunoDevice* pDevice, c_uint count, const JunoRegion* pRects);
+JUNO_API void JunoSetPrimitiveTopology(JunoDevice* pDevice, JunoPrimitiveTopology topology);
 
-JUNO_API void JunoDraw(JunoDevice* pDevice, c_uint mVertexCount, c_uint mStartVertex);
-JUNO_API void JunoDrawIndexed(JunoDevice* pDevice, c_uint mIndexCount, c_uint mStartIndex, c_int mBaseVertex);
-JUNO_API void JunoDrawInstanced(JunoDevice* pDevice, c_uint mVertexCountPerInstance, c_uint mInstanceCount, c_uint mStartVertex, c_uint mStartInstance);
-JUNO_API void JunoDrawIndexedInstanced(JunoDevice* pDevice, c_uint mIndexCountPerInstance, c_uint mInstanceCount, c_uint mStartIndex, c_int mBaseVertex, c_uint mStartInstance);
-JUNO_API void JunoDispatch(JunoDevice* pDevice, c_uint mGroupsX, c_uint mGroupsY, c_uint mGroupsZ);
+JUNO_API void JunoDraw(JunoDevice* pDevice, c_uint vertexCount, c_uint startVertex);
+JUNO_API void JunoDrawIndexed(JunoDevice* pDevice, c_uint indexCount, c_uint startIndex, c_int baseVertex);
+JUNO_API void JunoDrawInstanced(JunoDevice* pDevice, c_uint vertexCountPerInstance, c_uint instanceCount, c_uint startVertex, c_uint startInstance);
+JUNO_API void JunoDrawIndexedInstanced(JunoDevice* pDevice, c_uint indexCountPerInstance, c_uint instanceCount, c_uint startIndex, c_int baseVertex, c_uint startInstance);
+JUNO_API void JunoDispatch(JunoDevice* pDevice, c_uint groupsX, c_uint groupsY, c_uint groupsZ);
 
 /* ------------------------------------------------------------------------- */
 /* Fence (GPU event query)                                                   */

@@ -41,8 +41,8 @@ JUNO_API void JunoDestroyBlendState(JunoBlendState* pState)
 	delete pState;
 }
 
-JUNO_API void JunoSetBlendState(JunoDevice* pDevice, JunoBlendState* pState, const float* pBlendFactor, c_uint mSampleMask)
+JUNO_API void JunoSetBlendState(JunoDevice* pDevice, JunoBlendState* pState, const float* pBlendFactor, c_uint sampleMask)
 {
 	JUNO_ASSERT(pDevice != nullptr);
-	pDevice->mContext->OMSetBlendState(pState ? pState->mState.Get() : nullptr, pBlendFactor, mSampleMask);
+	pDevice->mContext->OMSetBlendState(pState ? pState->mState.Get() : nullptr, pBlendFactor, sampleMask);
 }

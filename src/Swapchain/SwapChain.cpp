@@ -185,13 +185,13 @@ JUNO_API void JunoDestroySwapChain(JunoSwapChain* pSwapChain)
 	delete pSwapChain;
 }
 
-JUNO_API JunoErrorCode JunoResizeSwapChain(JunoSwapChain* pSwapChain, c_uint mWidth, c_uint mHeight)
+JUNO_API JunoErrorCode JunoResizeSwapChain(JunoSwapChain* pSwapChain, c_uint width, c_uint height)
 {
 	JUNO_ASSERT(pSwapChain != nullptr);
 
-	if (mWidth == 0 || mHeight == 0)
-		GetClientSize(pSwapChain->mHwnd, &mWidth, &mHeight);
-	if (mWidth == 0 || mHeight == 0)
+	if (width == 0 || height == 0)
+		GetClientSize(pSwapChain->mHwnd, &width, &height);
+	if (width == 0 || height == 0)
 		return JunoErrorCode_Ok; // Minimized. Nothing to do.
 
 	ID3D11DeviceContext* pCtx = pSwapChain->mDevice->mContext.Get();
@@ -200,7 +200,7 @@ JUNO_API JunoErrorCode JunoResizeSwapChain(JunoSwapChain* pSwapChain, c_uint mWi
 	ResetTexture(pSwapChain->mDepthBuffer);
 	pCtx->Flush();
 
-	HRESULT hr = pSwapChain->mSwapChain->ResizeBuffers(0, mWidth, mHeight, DXGI_FORMAT_UNKNOWN, pSwapChain->mFlags);
+	HRESULT hr = pSwapChain->mSwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, pSwapChain->mFlags);
 	if (FAILED(hr))
 		return JunoFailHResult(JunoErrorCode_SwapChainResizeFailed, hr, "IDXGISwapChain1::ResizeBuffers");
 

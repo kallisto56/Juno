@@ -1,18 +1,18 @@
 #include "pch.h"
 #include "JunoInternal.h"
 
-JUNO_API JunoErrorCode JunoCreateInputLayout(JunoDevice* pDevice, const JunoInputElementDescription* pElements, c_uint mElementCount, const void* pVertexShaderBytecode, c_size mVertexShaderBytecodeSize, JunoInputLayout** ppLayout)
+JUNO_API JunoErrorCode JunoCreateInputLayout(JunoDevice* pDevice, const JunoInputElementDescription* pElements, c_uint elementCount, const void* pVertexShaderBytecode, c_size vertexShaderBytecodeSize, JunoInputLayout** ppLayout)
 {
 	JUNO_ASSERT(pDevice != nullptr);
 	JUNO_ASSERT(pElements != nullptr);
-	JUNO_ASSERT(mElementCount > 0);
+	JUNO_ASSERT(elementCount > 0);
 	JUNO_ASSERT(pVertexShaderBytecode != nullptr);
-	JUNO_ASSERT(mVertexShaderBytecodeSize > 0);
+	JUNO_ASSERT(vertexShaderBytecodeSize > 0);
 	JUNO_ASSERT(ppLayout != nullptr);
 	*ppLayout = nullptr;
 
-	std::vector<D3D11_INPUT_ELEMENT_DESC> elements(mElementCount);
-	for (c_uint i = 0; i < mElementCount; ++i)
+	std::vector<D3D11_INPUT_ELEMENT_DESC> elements(elementCount);
+	for (c_uint i = 0; i < elementCount; ++i)
 	{
 		JUNO_ASSERT(pElements[i].mSemanticName != nullptr);
 
@@ -29,7 +29,7 @@ JUNO_API JunoErrorCode JunoCreateInputLayout(JunoDevice* pDevice, const JunoInpu
 	JunoInputLayout* pLayout = new (std::nothrow) JunoInputLayout();
 	JUNO_REQUIRE_ALLOC(pLayout);
 
-	HRESULT hr = pDevice->mDevice->CreateInputLayout(elements.data(), mElementCount, pVertexShaderBytecode, mVertexShaderBytecodeSize, &pLayout->mLayout);
+	HRESULT hr = pDevice->mDevice->CreateInputLayout(elements.data(), elementCount, pVertexShaderBytecode, vertexShaderBytecodeSize, &pLayout->mLayout);
 	if (FAILED(hr))
 	{
 		delete pLayout;

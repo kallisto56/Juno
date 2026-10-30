@@ -52,7 +52,7 @@ static class Juno
 	extern static public void DestroySwapChain(SwapChain* pSwapChain);
 
 	[CallingConvention(.Cdecl), LinkName("JunoResizeSwapChain")]
-	extern static public ErrorCode ResizeSwapChain(SwapChain* pSwapChain, c_uint mWidth, c_uint mHeight);
+	extern static public ErrorCode ResizeSwapChain(SwapChain* pSwapChain, c_uint width, c_uint height);
 
 	[CallingConvention(.Cdecl), LinkName("JunoPresent")]
 	extern static public ErrorCode Present(SwapChain* pSwapChain, c_bool bVSync);
@@ -70,10 +70,10 @@ static class Juno
 	extern static public void DestroyBuffer(Buffer* pBuffer);
 
 	[CallingConvention(.Cdecl), LinkName("JunoUpdateBuffer")]
-	extern static public ErrorCode UpdateBuffer(Device* pDevice, Buffer* pBuffer, c_size mOffset, void* pData, c_size mSize);
+	extern static public ErrorCode UpdateBuffer(Device* pDevice, Buffer* pBuffer, c_size offset, void* pData, c_size size);
 
 	[CallingConvention(.Cdecl), LinkName("JunoMapBuffer")]
-	extern static public ErrorCode MapBuffer(Device* pDevice, Buffer* pBuffer, MapMode mMode, out void* ppData);
+	extern static public ErrorCode MapBuffer(Device* pDevice, Buffer* pBuffer, MapMode mode, out void* ppData);
 
 	[CallingConvention(.Cdecl), LinkName("JunoUnmapBuffer")]
 	extern static public void UnmapBuffer(Device* pDevice, Buffer* pBuffer);
@@ -82,19 +82,19 @@ static class Juno
 	extern static public void CopyBuffer(Device* pDevice, Buffer* pDst, Buffer* pSrc);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetVertexBuffers")]
-	extern static public void SetVertexBuffers(Device* pDevice, c_uint mStartSlot, c_uint mCount, Buffer** ppBuffers, c_uint* pStrides, c_uint* pOffsets);
+	extern static public void SetVertexBuffers(Device* pDevice, c_uint startSlot, c_uint count, Buffer** ppBuffers, c_uint* pStrides, c_uint* pOffsets);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetIndexBuffer")]
-	extern static public void SetIndexBuffer(Device* pDevice, Buffer* pBuffer, IndexFormat mFormat, c_uint mOffset);
+	extern static public void SetIndexBuffer(Device* pDevice, Buffer* pBuffer, IndexFormat format, c_uint offset);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetConstantBuffers")]
-	extern static public void SetConstantBuffers(Device* pDevice, ShaderStage mStage, c_uint mStartSlot, c_uint mCount, Buffer** ppBuffers);
+	extern static public void SetConstantBuffers(Device* pDevice, ShaderStage stage, c_uint startSlot, c_uint count, Buffer** ppBuffers);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetBufferResources")]
-	extern static public void SetBufferResources(Device* pDevice, ShaderStage mStage, c_uint mStartSlot, c_uint mCount, Buffer** ppBuffers);
+	extern static public void SetBufferResources(Device* pDevice, ShaderStage stage, c_uint startSlot, c_uint count, Buffer** ppBuffers);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetUnorderedAccessBuffers")]
-	extern static public void SetUnorderedAccessBuffers(Device* pDevice, c_uint mStartSlot, c_uint mCount, Buffer** ppBuffers);
+	extern static public void SetUnorderedAccessBuffers(Device* pDevice, c_uint startSlot, c_uint count, Buffer** ppBuffers);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateTexture")]
 	extern static public ErrorCode CreateTexture(Texture.CreateInfo* pCreateInfo, out Texture* ppTexture);
@@ -103,13 +103,13 @@ static class Juno
 	extern static public void DestroyTexture(Texture* pTexture);
 
 	[CallingConvention(.Cdecl), LinkName("JunoUpdateTexture")]
-	extern static public ErrorCode UpdateTexture(Device* pDevice, Texture* pTexture, c_uint mArraySlice, c_uint mMipLevel, Region* pRegion, void* pData, c_uint mRowPitch);
+	extern static public ErrorCode UpdateTexture(Device* pDevice, Texture* pTexture, c_uint arraySlice, c_uint mipLevel, Region* pRegion, void* pData, c_uint rowPitch);
 
 	[CallingConvention(.Cdecl), LinkName("JunoMapTexture")]
-	extern static public ErrorCode MapTexture(Device* pDevice, Texture* pTexture, c_uint mArraySlice, c_uint mMipLevel, MapMode mMode, out void* ppData, c_uint* pRowPitch);
+	extern static public ErrorCode MapTexture(Device* pDevice, Texture* pTexture, c_uint arraySlice, c_uint mipLevel, MapMode mode, out void* ppData, c_uint* pRowPitch);
 
 	[CallingConvention(.Cdecl), LinkName("JunoUnmapTexture")]
-	extern static public void UnmapTexture(Device* pDevice, Texture* pTexture, c_uint mArraySlice, c_uint mMipLevel);
+	extern static public void UnmapTexture(Device* pDevice, Texture* pTexture, c_uint arraySlice, c_uint mipLevel);
 
 	[CallingConvention(.Cdecl), LinkName("JunoGenerateMips")]
 	extern static public void GenerateMips(Device* pDevice, Texture* pTexture);
@@ -124,19 +124,19 @@ static class Juno
 	extern static public void GetTextureSize(Texture* pTexture, c_uint* pWidth, c_uint* pHeight);
 
 	[CallingConvention(.Cdecl), LinkName("JunoClearRenderTarget")]
-	extern static public void ClearRenderTarget(Device* pDevice, Texture* pTexture, float mR, float mG, float mB, float mA);
+	extern static public void ClearRenderTarget(Device* pDevice, Texture* pTexture, float r, float g, float b, float a);
 
 	[CallingConvention(.Cdecl), LinkName("JunoClearDepthStencil")]
-	extern static public void ClearDepthStencil(Device* pDevice, Texture* pTexture, ClearFlags mClearFlags, float mDepth, c_uchar mStencil);
+	extern static public void ClearDepthStencil(Device* pDevice, Texture* pTexture, ClearFlags clearFlags, float depth, c_uchar stencil);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetTextures")]
-	extern static public void SetTextures(Device* pDevice, ShaderStage mStage, c_uint mStartSlot, c_uint mCount, Texture** ppTextures);
+	extern static public void SetTextures(Device* pDevice, ShaderStage stage, c_uint startSlot, c_uint count, Texture** ppTextures);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetUnorderedAccessTextures")]
-	extern static public void SetUnorderedAccessTextures(Device* pDevice, c_uint mStartSlot, c_uint mCount, Texture** ppTextures);
+	extern static public void SetUnorderedAccessTextures(Device* pDevice, c_uint startSlot, c_uint count, Texture** ppTextures);
 
 	[CallingConvention(.Cdecl), LinkName("JunoLoadImage")]
-	extern static public ErrorCode LoadImage(void* pData, c_size mSize, PixelFormat mDesiredFormat, out JunoImage* ppImage);
+	extern static public ErrorCode LoadImage(void* pData, c_size size, PixelFormat desiredFormat, out JunoImage* ppImage);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDestroyImage")]
 	extern static public void DestroyImage(JunoImage* pImage);
@@ -151,7 +151,7 @@ static class Juno
 	extern static public void DestroySampler(Sampler* pSampler);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetSamplers")]
-	extern static public void SetSamplers(Device* pDevice, ShaderStage mStage, c_uint mStartSlot, c_uint mCount, Sampler** ppSamplers);
+	extern static public void SetSamplers(Device* pDevice, ShaderStage stage, c_uint startSlot, c_uint count, Sampler** ppSamplers);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCompileShader")]
 	extern static public ErrorCode CompileShader(Shader.CompileInfo* pCompileInfo, out Blob* ppBlob);
@@ -178,10 +178,10 @@ static class Juno
 	extern static public void SetShader(Device* pDevice, Shader* pShader);
 
 	[CallingConvention(.Cdecl), LinkName("JunoUnsetShader")]
-	extern static public void UnsetShader(Device* pDevice, ShaderStage mStage);
+	extern static public void UnsetShader(Device* pDevice, ShaderStage stage);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateInputLayout")]
-	extern static public ErrorCode CreateInputLayout(Device* pDevice, InputElementDescription* pElements, c_uint mElementCount, void* pVertexShaderBytecode, c_size mVertexShaderBytecodeSize, out InputLayout* ppLayout);
+	extern static public ErrorCode CreateInputLayout(Device* pDevice, InputElementDescription* pElements, c_uint elementCount, void* pVertexShaderBytecode, c_size vertexShaderBytecodeSize, out InputLayout* ppLayout);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDestroyInputLayout")]
 	extern static public void DestroyInputLayout(InputLayout* pLayout);
@@ -196,7 +196,7 @@ static class Juno
 	extern static public void DestroyBlendState(BlendState* pState);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetBlendState")]
-	extern static public void SetBlendState(Device* pDevice, BlendState* pState, float* pBlendFactor, c_uint mSampleMask);
+	extern static public void SetBlendState(Device* pDevice, BlendState* pState, float* pBlendFactor, c_uint sampleMask);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateRasterizerState")]
 	extern static public ErrorCode CreateRasterizerState(Device* pDevice, RasterizerDesc* pDesc, out RasterizerState* ppState);
@@ -214,34 +214,34 @@ static class Juno
 	extern static public void DestroyDepthStencilState(DepthStencilState* pState);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetDepthStencilState")]
-	extern static public void SetDepthStencilState(Device* pDevice, DepthStencilState* pState, c_uint mStencilRef);
+	extern static public void SetDepthStencilState(Device* pDevice, DepthStencilState* pState, c_uint stencilRef);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetRenderTargets")]
-	extern static public void SetRenderTargets(Device* pDevice, c_uint mCount, Texture** ppColorTargets, Texture* pDepthTarget);
+	extern static public void SetRenderTargets(Device* pDevice, c_uint count, Texture** ppColorTargets, Texture* pDepthTarget);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetViewports")]
-	extern static public void SetViewports(Device* pDevice, c_uint mCount, Viewport* pViewports);
+	extern static public void SetViewports(Device* pDevice, c_uint count, Viewport* pViewports);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetScissorRects")]
-	extern static public void SetScissorRects(Device* pDevice, c_uint mCount, Region* pRects);
+	extern static public void SetScissorRects(Device* pDevice, c_uint count, Region* pRects);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetPrimitiveTopology")]
-	extern static public void SetPrimitiveTopology(Device* pDevice, PrimitiveTopology mTopology);
+	extern static public void SetPrimitiveTopology(Device* pDevice, PrimitiveTopology topology);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDraw")]
-	extern static public void Draw(Device* pDevice, c_uint mVertexCount, c_uint mStartVertex);
+	extern static public void Draw(Device* pDevice, c_uint vertexCount, c_uint startVertex);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDrawIndexed")]
-	extern static public void DrawIndexed(Device* pDevice, c_uint mIndexCount, c_uint mStartIndex, c_int mBaseVertex);
+	extern static public void DrawIndexed(Device* pDevice, c_uint indexCount, c_uint startIndex, c_int baseVertex);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDrawInstanced")]
-	extern static public void DrawInstanced(Device* pDevice, c_uint mVertexCountPerInstance, c_uint mInstanceCount, c_uint mStartVertex, c_uint mStartInstance);
+	extern static public void DrawInstanced(Device* pDevice, c_uint vertexCountPerInstance, c_uint instanceCount, c_uint startVertex, c_uint startInstance);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDrawIndexedInstanced")]
-	extern static public void DrawIndexedInstanced(Device* pDevice, c_uint mIndexCountPerInstance, c_uint mInstanceCount, c_uint mStartIndex, c_int mBaseVertex, c_uint mStartInstance);
+	extern static public void DrawIndexedInstanced(Device* pDevice, c_uint indexCountPerInstance, c_uint instanceCount, c_uint startIndex, c_int baseVertex, c_uint startInstance);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDispatch")]
-	extern static public void Dispatch(Device* pDevice, c_uint mGroupsX, c_uint mGroupsY, c_uint mGroupsZ);
+	extern static public void Dispatch(Device* pDevice, c_uint groupsX, c_uint groupsY, c_uint groupsZ);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateFence")]
 	extern static public ErrorCode CreateFence(Device* pDevice, out Fence* ppFence);

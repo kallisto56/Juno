@@ -51,15 +51,14 @@ static JunoErrorCode ResolveFormat(JunoPixelFormat desired, int sourceChannels, 
 	}
 }
 
-JUNO_API JunoErrorCode JunoLoadImage(const void* pData, c_size mSize, JunoPixelFormat mDesiredFormat, JunoImage** ppImage)
+JUNO_API JunoErrorCode JunoLoadImage(const void* pData, c_size size, JunoPixelFormat desiredFormat, JunoImage** ppImage)
 {
 	JUNO_ASSERT(pData != nullptr);
-	JUNO_ASSERT(mSize > 0 && mSize <= (c_size)INT_MAX);
+	JUNO_ASSERT(size > 0 && size <= (c_size)INT_MAX);
 	JUNO_ASSERT(ppImage != nullptr);
 	*ppImage = nullptr;
 
 	const stbi_uc* pBytes = (const stbi_uc*)pData;
-	const int size = (int)mSize;
 
 	// Header only: detects the source channel count (a PNG may be grey, grey+alpha, RGB or RGBA).
 	int width = 0, height = 0, sourceChannels = 0;
@@ -68,7 +67,7 @@ JUNO_API JunoErrorCode JunoLoadImage(const void* pData, c_size mSize, JunoPixelF
 
 	int channels = 0;
 	JunoPixelFormat format = JunoPixelFormat_Unknown;
-	JunoErrorCode code = ResolveFormat(mDesiredFormat, sourceChannels, &channels, &format);
+	JunoErrorCode code = ResolveFormat(desiredFormat, sourceChannels, &channels, &format);
 	if (code != JunoErrorCode_Ok)
 		return code;
 

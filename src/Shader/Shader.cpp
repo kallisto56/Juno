@@ -155,12 +155,12 @@ JUNO_API void JunoSetShader(JunoDevice* pDevice, JunoShader* pShader)
 	}
 }
 
-JUNO_API void JunoUnsetShader(JunoDevice* pDevice, JunoShaderStage mStage)
+JUNO_API void JunoUnsetShader(JunoDevice* pDevice, JunoShaderStage stage)
 {
 	JUNO_ASSERT(pDevice != nullptr);
 
 	ID3D11DeviceContext* pCtx = pDevice->mContext.Get();
-	switch (mStage)
+	switch (stage)
 	{
 	case JunoShaderStage_Vertex: pCtx->VSSetShader(nullptr, nullptr, 0); break;
 	case JunoShaderStage_Pixel: pCtx->PSSetShader(nullptr, nullptr, 0); break;

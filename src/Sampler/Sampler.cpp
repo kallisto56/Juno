@@ -42,15 +42,15 @@ JUNO_API void JunoDestroySampler(JunoSampler* pSampler)
 	delete pSampler;
 }
 
-JUNO_API void JunoSetSamplers(JunoDevice* pDevice, JunoShaderStage mStage, c_uint mStartSlot, c_uint mCount, JunoSampler* const* ppSamplers)
+JUNO_API void JunoSetSamplers(JunoDevice* pDevice, JunoShaderStage stage, c_uint startSlot, c_uint count, JunoSampler* const* ppSamplers)
 {
 	JUNO_ASSERT(pDevice != nullptr);
-	JUNO_ASSERT(mStartSlot + mCount <= JUNO_MAX_SAMPLER_SLOTS);
-	JUNO_ASSERT(mCount == 0 || ppSamplers != nullptr);
+	JUNO_ASSERT(startSlot + count <= JUNO_MAX_SAMPLER_SLOTS);
+	JUNO_ASSERT(count == 0 || ppSamplers != nullptr);
 
 	ID3D11SamplerState* samplers[JUNO_MAX_SAMPLER_SLOTS] = {};
-	for (c_uint i = 0; i < mCount; ++i)
+	for (c_uint i = 0; i < count; ++i)
 		samplers[i] = ppSamplers[i] ? ppSamplers[i]->mState.Get() : nullptr;
 
-	JunoBindSamplers(pDevice->mContext.Get(), mStage, mStartSlot, mCount, samplers);
+	JunoBindSamplers(pDevice->mContext.Get(), stage, startSlot, count, samplers);
 }
