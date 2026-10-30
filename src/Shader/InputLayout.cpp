@@ -3,18 +3,18 @@
 
 JUNO_API JunoErrorCode JunoCreateInputLayout(JunoDevice* pDevice, const JunoInputElementDescription* pElements, c_uint mElementCount, JunoShader* pVertexShader, JunoInputLayout** ppLayout)
 {
-	JUNO_REQUIRE(pDevice != nullptr);
-	JUNO_REQUIRE(pElements != nullptr);
-	JUNO_REQUIRE(mElementCount > 0);
-	JUNO_REQUIRE(pVertexShader != nullptr);
-	JUNO_REQUIRE(pVertexShader->mStage == JunoShaderStage_Vertex);
-	JUNO_REQUIRE(ppLayout != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(pElements != nullptr);
+	JUNO_ASSERT(mElementCount > 0);
+	JUNO_ASSERT(pVertexShader != nullptr);
+	JUNO_ASSERT(pVertexShader->mStage == JunoShaderStage_Vertex);
+	JUNO_ASSERT(ppLayout != nullptr);
 	*ppLayout = nullptr;
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> elements(mElementCount);
 	for (c_uint i = 0; i < mElementCount; ++i)
 	{
-		JUNO_REQUIRE(pElements[i].mSemanticName != nullptr);
+		JUNO_ASSERT(pElements[i].mSemanticName != nullptr);
 
 		D3D11_INPUT_ELEMENT_DESC& e = elements[i];
 		e.SemanticName = pElements[i].mSemanticName;
@@ -47,6 +47,6 @@ JUNO_API void JunoDestroyInputLayout(JunoInputLayout* pLayout)
 
 JUNO_API void JunoSetInputLayout(JunoDevice* pDevice, JunoInputLayout* pLayout)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
 	pDevice->mContext->IASetInputLayout(pLayout ? pLayout->mLayout.Get() : nullptr);
 }

@@ -89,17 +89,17 @@ static JunoErrorCode FailAndDelete(JunoSwapChain* pSC, HRESULT hr, const char* p
 
 JUNO_API JunoErrorCode JunoCreateSwapChain(const JunoSwapChainCreateInfo* pCreateInfo, JunoSwapChain** ppSwapChain)
 {
-	JUNO_REQUIRE(pCreateInfo != nullptr);
-	JUNO_REQUIRE(pCreateInfo->mDevice != nullptr);
-	JUNO_REQUIRE(ppSwapChain != nullptr);
+	JUNO_ASSERT(pCreateInfo != nullptr);
+	JUNO_ASSERT(pCreateInfo->mDevice != nullptr);
+	JUNO_ASSERT(ppSwapChain != nullptr);
 	*ppSwapChain = nullptr;
-	JUNO_REQUIRE(pCreateInfo->mWindow != nullptr);
+	JUNO_ASSERT(pCreateInfo->mWindow != nullptr);
 
 	HWND hwnd = (HWND)pCreateInfo->mWindow;
-	JUNO_REQUIRE(IsWindow(hwnd));
+	JUNO_ASSERT(IsWindow(hwnd));
 
 	JunoSwapChain* pSC = new (std::nothrow) JunoSwapChain();
-	JUNO_REQUIRE_ALLOC(pSC);
+	JUNO_ASSERT(pSC);
 
 	pSC->mDevice = pCreateInfo->mDevice;
 	pSC->mHwnd = hwnd;
@@ -187,7 +187,7 @@ JUNO_API void JunoDestroySwapChain(JunoSwapChain* pSwapChain)
 
 JUNO_API JunoErrorCode JunoResizeSwapChain(JunoSwapChain* pSwapChain, c_uint mWidth, c_uint mHeight)
 {
-	JUNO_REQUIRE(pSwapChain != nullptr);
+	JUNO_ASSERT(pSwapChain != nullptr);
 
 	if (mWidth == 0 || mHeight == 0)
 		GetClientSize(pSwapChain->mHwnd, &mWidth, &mHeight);
@@ -212,7 +212,7 @@ JUNO_API JunoErrorCode JunoResizeSwapChain(JunoSwapChain* pSwapChain, c_uint mWi
 
 JUNO_API JunoErrorCode JunoPresent(JunoSwapChain* pSwapChain, c_bool bVSync)
 {
-	JUNO_REQUIRE(pSwapChain != nullptr);
+	JUNO_ASSERT(pSwapChain != nullptr);
 
 	UINT syncInterval = bVSync ? 1 : 0;
 	UINT flags = (!bVSync && pSwapChain->bTearing) ? DXGI_PRESENT_ALLOW_TEARING : 0;
@@ -230,12 +230,12 @@ JUNO_API JunoErrorCode JunoPresent(JunoSwapChain* pSwapChain, c_bool bVSync)
 
 JUNO_API JunoTexture* JunoGetBackBuffer(JunoSwapChain* pSwapChain)
 {
-	JUNO_REQUIRE_RETURN(pSwapChain != nullptr, nullptr);
+	JUNO_ASSERT(pSwapChain != nullptr);
 	return &pSwapChain->mBackBuffer;
 }
 
 JUNO_API JunoTexture* JunoGetDepthBuffer(JunoSwapChain* pSwapChain)
 {
-	JUNO_REQUIRE_RETURN(pSwapChain != nullptr, nullptr);
+	JUNO_ASSERT(pSwapChain != nullptr);
 	return pSwapChain->mDepthBuffer.mDSV ? &pSwapChain->mDepthBuffer : nullptr;
 }

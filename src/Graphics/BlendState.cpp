@@ -3,9 +3,9 @@
 
 JUNO_API JunoErrorCode JunoCreateBlendState(JunoDevice* pDevice, const JunoBlendDesc* pDesc, JunoBlendState** ppState)
 {
-	JUNO_REQUIRE(pDevice != nullptr);
-	JUNO_REQUIRE(pDesc != nullptr);
-	JUNO_REQUIRE(ppState != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(pDesc != nullptr);
+	JUNO_ASSERT(ppState != nullptr);
 	*ppState = nullptr;
 
 	D3D11_BLEND_DESC bd = {};
@@ -43,6 +43,6 @@ JUNO_API void JunoDestroyBlendState(JunoBlendState* pState)
 
 JUNO_API void JunoSetBlendState(JunoDevice* pDevice, JunoBlendState* pState, const float* pBlendFactor, c_uint mSampleMask)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
 	pDevice->mContext->OMSetBlendState(pState ? pState->mState.Get() : nullptr, pBlendFactor, mSampleMask);
 }

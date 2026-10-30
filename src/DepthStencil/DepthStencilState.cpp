@@ -13,9 +13,9 @@ static D3D11_DEPTH_STENCILOP_DESC ToD3D(const JunoStencilOpDesc& op)
 
 JUNO_API JunoErrorCode JunoCreateDepthStencilState(JunoDevice* pDevice, const JunoDepthStencilDesc* pDesc, JunoDepthStencilState** ppState)
 {
-	JUNO_REQUIRE(pDevice != nullptr);
-	JUNO_REQUIRE(pDesc != nullptr);
-	JUNO_REQUIRE(ppState != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(pDesc != nullptr);
+	JUNO_ASSERT(ppState != nullptr);
 	*ppState = nullptr;
 
 	D3D11_DEPTH_STENCIL_DESC dd = {};
@@ -49,6 +49,6 @@ JUNO_API void JunoDestroyDepthStencilState(JunoDepthStencilState* pState)
 
 JUNO_API void JunoSetDepthStencilState(JunoDevice* pDevice, JunoDepthStencilState* pState, c_uint mStencilRef)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
 	pDevice->mContext->OMSetDepthStencilState(pState ? pState->mState.Get() : nullptr, mStencilRef);
 }

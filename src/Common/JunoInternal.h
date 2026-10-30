@@ -34,28 +34,6 @@ extern JunoFatalErrorHandlerFunc RuntimeFatalError;
 if (!(condition)) \
 	RuntimeFatalError(#condition, __FILE__, __LINE__);
 
-/* Blunt user mistakes: assert in debug, return InvalidArgument in release. */
-#define JUNO_REQUIRE(cond) \
-	do { \
-		assert(cond); \
-		if (!(cond)) \
-			return JunoSetError(JunoErrorCode_InvalidArgument, S_OK, "Precondition failed: %s (%s:%d)", #cond, __FILE__, __LINE__); \
-	} while (0)
-
-#define JUNO_REQUIRE_VOID(cond) \
-	do { \
-		assert(cond); \
-		if (!(cond)) \
-			return; \
-	} while (0)
-
-#define JUNO_REQUIRE_RETURN(cond, value) \
-	do { \
-		assert(cond); \
-		if (!(cond)) \
-			return (value); \
-	} while (0)
-
 #define JUNO_REQUIRE_ALLOC(ptr) \
 	do { \
 		if ((ptr) == nullptr) \

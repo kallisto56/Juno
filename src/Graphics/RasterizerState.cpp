@@ -3,9 +3,9 @@
 
 JUNO_API JunoErrorCode JunoCreateRasterizerState(JunoDevice* pDevice, const JunoRasterizerDesc* pDesc, JunoRasterizerState** ppState)
 {
-	JUNO_REQUIRE(pDevice != nullptr);
-	JUNO_REQUIRE(pDesc != nullptr);
-	JUNO_REQUIRE(ppState != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(pDesc != nullptr);
+	JUNO_ASSERT(ppState != nullptr);
 	*ppState = nullptr;
 
 	D3D11_RASTERIZER_DESC rd = {};
@@ -41,6 +41,6 @@ JUNO_API void JunoDestroyRasterizerState(JunoRasterizerState* pState)
 
 JUNO_API void JunoSetRasterizerState(JunoDevice* pDevice, JunoRasterizerState* pState)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
 	pDevice->mContext->RSSetState(pState ? pState->mState.Get() : nullptr);
 }

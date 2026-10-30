@@ -53,9 +53,9 @@ static JunoErrorCode ResolveFormat(JunoPixelFormat desired, int sourceChannels, 
 
 JUNO_API JunoErrorCode JunoLoadImage(const void* pData, c_size mSize, JunoPixelFormat mDesiredFormat, JunoImage** ppImage)
 {
-	JUNO_REQUIRE(pData != nullptr);
-	JUNO_REQUIRE(mSize > 0 && mSize <= (c_size)INT_MAX);
-	JUNO_REQUIRE(ppImage != nullptr);
+	JUNO_ASSERT(pData != nullptr);
+	JUNO_ASSERT(mSize > 0 && mSize <= (c_size)INT_MAX);
+	JUNO_ASSERT(ppImage != nullptr);
 	*ppImage = nullptr;
 
 	const stbi_uc* pBytes = (const stbi_uc*)pData;

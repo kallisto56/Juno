@@ -3,9 +3,9 @@
 
 JUNO_API JunoErrorCode JunoCreateSampler(const JunoSamplerCreateInfo* pCreateInfo, JunoSampler** ppSampler)
 {
-	JUNO_REQUIRE(pCreateInfo != nullptr);
-	JUNO_REQUIRE(pCreateInfo->mDevice != nullptr);
-	JUNO_REQUIRE(ppSampler != nullptr);
+	JUNO_ASSERT(pCreateInfo != nullptr);
+	JUNO_ASSERT(pCreateInfo->mDevice != nullptr);
+	JUNO_ASSERT(ppSampler != nullptr);
 	*ppSampler = nullptr;
 
 	D3D11_SAMPLER_DESC sd = {};
@@ -44,9 +44,9 @@ JUNO_API void JunoDestroySampler(JunoSampler* pSampler)
 
 JUNO_API void JunoSetSamplers(JunoDevice* pDevice, JunoShaderStage mStage, c_uint mStartSlot, c_uint mCount, JunoSampler* const* ppSamplers)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
-	JUNO_REQUIRE_VOID(mStartSlot + mCount <= JUNO_MAX_SAMPLER_SLOTS);
-	JUNO_REQUIRE_VOID(mCount == 0 || ppSamplers != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(mStartSlot + mCount <= JUNO_MAX_SAMPLER_SLOTS);
+	JUNO_ASSERT(mCount == 0 || ppSamplers != nullptr);
 
 	ID3D11SamplerState* samplers[JUNO_MAX_SAMPLER_SLOTS] = {};
 	for (c_uint i = 0; i < mCount; ++i)

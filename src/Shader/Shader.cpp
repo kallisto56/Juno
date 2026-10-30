@@ -9,11 +9,11 @@ static JunoErrorCode CompileFailed(HRESULT hr, ID3DBlob* pErrors)
 
 JUNO_API JunoErrorCode JunoCompileShader(const c_char* pSource, c_size mSourceLength, const c_char* pSourceName, const c_char* pEntryPoint, const c_char* pTarget, c_uint mCompileFlags, JunoBlob** ppBlob)
 {
-	JUNO_REQUIRE(pSource != nullptr);
-	JUNO_REQUIRE(mSourceLength > 0);
-	JUNO_REQUIRE(pEntryPoint != nullptr);
-	JUNO_REQUIRE(pTarget != nullptr);
-	JUNO_REQUIRE(ppBlob != nullptr);
+	JUNO_ASSERT(pSource != nullptr);
+	JUNO_ASSERT(mSourceLength > 0);
+	JUNO_ASSERT(pEntryPoint != nullptr);
+	JUNO_ASSERT(pTarget != nullptr);
+	JUNO_ASSERT(ppBlob != nullptr);
 	*ppBlob = nullptr;
 
 	ComPtr<ID3DBlob> code;
@@ -31,10 +31,10 @@ JUNO_API JunoErrorCode JunoCompileShader(const c_char* pSource, c_size mSourceLe
 
 JUNO_API JunoErrorCode JunoCompileShaderFromFile(const c_wchar* pPath, const c_char* pEntryPoint, const c_char* pTarget, c_uint mCompileFlags, JunoBlob** ppBlob)
 {
-	JUNO_REQUIRE(pPath != nullptr);
-	JUNO_REQUIRE(pEntryPoint != nullptr);
-	JUNO_REQUIRE(pTarget != nullptr);
-	JUNO_REQUIRE(ppBlob != nullptr);
+	JUNO_ASSERT(pPath != nullptr);
+	JUNO_ASSERT(pEntryPoint != nullptr);
+	JUNO_ASSERT(pTarget != nullptr);
+	JUNO_ASSERT(ppBlob != nullptr);
 	*ppBlob = nullptr;
 
 	ComPtr<ID3DBlob> code;
@@ -54,13 +54,13 @@ JUNO_API JunoErrorCode JunoCompileShaderFromFile(const c_wchar* pPath, const c_c
 
 JUNO_API const void* JunoGetBlobData(JunoBlob* pBlob)
 {
-	JUNO_REQUIRE_RETURN(pBlob != nullptr, nullptr);
+	JUNO_ASSERT(pBlob != nullptr);
 	return pBlob->mBlob->GetBufferPointer();
 }
 
 JUNO_API c_size JunoGetBlobSize(JunoBlob* pBlob)
 {
-	JUNO_REQUIRE_RETURN(pBlob != nullptr, 0);
+	JUNO_ASSERT(pBlob != nullptr);
 	return (c_size)pBlob->mBlob->GetBufferSize();
 }
 
@@ -71,10 +71,10 @@ JUNO_API void JunoDestroyBlob(JunoBlob* pBlob)
 
 JUNO_API JunoErrorCode JunoCreateShader(JunoDevice* pDevice, JunoShaderStage mStage, const void* pBytecode, c_size mBytecodeSize, JunoShader** ppShader)
 {
-	JUNO_REQUIRE(pDevice != nullptr);
-	JUNO_REQUIRE(pBytecode != nullptr);
-	JUNO_REQUIRE(mBytecodeSize > 0);
-	JUNO_REQUIRE(ppShader != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(pBytecode != nullptr);
+	JUNO_ASSERT(mBytecodeSize > 0);
+	JUNO_ASSERT(ppShader != nullptr);
 	*ppShader = nullptr;
 
 	JunoShader* pShader = new (std::nothrow) JunoShader();
@@ -137,8 +137,8 @@ JUNO_API void JunoDestroyShader(JunoShader* pShader)
 
 JUNO_API void JunoSetShader(JunoDevice* pDevice, JunoShaderStage mStage, JunoShader* pShader)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
-	JUNO_REQUIRE_VOID(pShader == nullptr || pShader->mStage == mStage);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(pShader == nullptr || pShader->mStage == mStage);
 
 	ID3D11DeviceChild* pNative = pShader ? pShader->mShader.Get() : nullptr;
 	ID3D11DeviceContext* pCtx = pDevice->mContext.Get();

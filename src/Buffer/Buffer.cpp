@@ -3,14 +3,14 @@
 
 JUNO_API JunoErrorCode JunoCreateBuffer(const JunoBufferCreateInfo* pCreateInfo, JunoBuffer** ppBuffer)
 {
-	JUNO_REQUIRE(pCreateInfo != nullptr);
-	JUNO_REQUIRE(pCreateInfo->mDevice != nullptr);
-	JUNO_REQUIRE(ppBuffer != nullptr);
+	JUNO_ASSERT(pCreateInfo != nullptr);
+	JUNO_ASSERT(pCreateInfo->mDevice != nullptr);
+	JUNO_ASSERT(ppBuffer != nullptr);
 	*ppBuffer = nullptr;
-	JUNO_REQUIRE(pCreateInfo->mSize > 0);
-	JUNO_REQUIRE(pCreateInfo->mUsage != JunoUsage_Immutable || pCreateInfo->mInitialData != nullptr);
-	JUNO_REQUIRE((pCreateInfo->mBindFlags & JunoBindFlags_ConstantBuffer) == 0 || (pCreateInfo->mSize % 16) == 0);
-	JUNO_REQUIRE(!pCreateInfo->bStructured || pCreateInfo->mStride > 0);
+	JUNO_ASSERT(pCreateInfo->mSize > 0);
+	JUNO_ASSERT(pCreateInfo->mUsage != JunoUsage_Immutable || pCreateInfo->mInitialData != nullptr);
+	JUNO_ASSERT((pCreateInfo->mBindFlags & JunoBindFlags_ConstantBuffer) == 0 || (pCreateInfo->mSize % 16) == 0);
+	JUNO_ASSERT(!pCreateInfo->bStructured || pCreateInfo->mStride > 0);
 
 	D3D11_BUFFER_DESC bd = {};
 	bd.ByteWidth = pCreateInfo->mSize;
@@ -77,13 +77,13 @@ JUNO_API void JunoDestroyBuffer(JunoBuffer* pBuffer)
 
 JUNO_API JunoErrorCode JunoUpdateBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer, c_size mOffset, const void* pData, c_size mSize)
 {
-	JUNO_REQUIRE(pDevice != nullptr);
-	JUNO_REQUIRE(pBuffer != nullptr);
-	JUNO_REQUIRE(pData != nullptr);
-	JUNO_REQUIRE(mSize > 0 && mOffset + mSize <= pBuffer->mCreateInfo.mSize);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(pBuffer != nullptr);
+	JUNO_ASSERT(pData != nullptr);
+	JUNO_ASSERT(mSize > 0 && mOffset + mSize <= pBuffer->mCreateInfo.mSize);
 
 	const JunoUsage usage = pBuffer->mCreateInfo.mUsage;
-	JUNO_REQUIRE(usage != JunoUsage_Immutable);
+	JUNO_ASSERT(usage != JunoUsage_Immutable);
 
 	ID3D11DeviceContext* pCtx = pDevice->mContext.Get();
 	ID3D11Buffer* pNative = pBuffer->mHandle.Get();
@@ -103,7 +103,7 @@ JUNO_API JunoErrorCode JunoUpdateBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer
 
 	const bool bWhole = (mOffset == 0 && mSize == pBuffer->mCreateInfo.mSize);
 	const bool bConstant = (pBuffer->mCreateInfo.mBindFlags & JunoBindFlags_ConstantBuffer) != 0;
-	JUNO_REQUIRE(!bConstant || bWhole); // Partial updates of constant buffers are not allowed.
+	JUNO_ASSERT(!bConstant || bWhole); // Partial updates of constant buffers are not allowed.
 
 	if (bWhole)
 	{
@@ -119,9 +119,9 @@ JUNO_API JunoErrorCode JunoUpdateBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer
 
 JUNO_API JunoErrorCode JunoMapBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer, JunoMapMode mMode, void** ppData)
 {
-	JUNO_REQUIRE(pDevice != nullptr);
-	JUNO_REQUIRE(pBuffer != nullptr);
-	JUNO_REQUIRE(ppData != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(pBuffer != nullptr);
+	JUNO_ASSERT(ppData != nullptr);
 	*ppData = nullptr;
 
 	D3D11_MAPPED_SUBRESOURCE mapped = {};
@@ -135,25 +135,25 @@ JUNO_API JunoErrorCode JunoMapBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer, J
 
 JUNO_API void JunoUnmapBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
-	JUNO_REQUIRE_VOID(pBuffer != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(pBuffer != nullptr);
 	pDevice->mContext->Unmap(pBuffer->mHandle.Get(), 0);
 }
 
 JUNO_API void JunoCopyBuffer(JunoDevice* pDevice, JunoBuffer* pDst, JunoBuffer* pSrc)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
-	JUNO_REQUIRE_VOID(pDst != nullptr);
-	JUNO_REQUIRE_VOID(pSrc != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(pDst != nullptr);
+	JUNO_ASSERT(pSrc != nullptr);
 	pDevice->mContext->CopyResource(pDst->mHandle.Get(), pSrc->mHandle.Get());
 }
 
 JUNO_API void JunoSetVertexBuffers(JunoDevice* pDevice, c_uint mStartSlot, c_uint mCount, JunoBuffer* const* ppBuffers, const c_uint* pStrides, const c_uint* pOffsets)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
-	JUNO_REQUIRE_VOID(mCount <= JUNO_MAX_VB_SLOTS);
-	JUNO_REQUIRE_VOID(mCount == 0 || ppBuffers != nullptr);
-	JUNO_REQUIRE_VOID(mCount == 0 || pStrides != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(mCount <= JUNO_MAX_VB_SLOTS);
+	JUNO_ASSERT(mCount == 0 || ppBuffers != nullptr);
+	JUNO_ASSERT(mCount == 0 || pStrides != nullptr);
 
 	ID3D11Buffer* buffers[JUNO_MAX_VB_SLOTS] = {};
 	UINT zeroOffsets[JUNO_MAX_VB_SLOTS] = {};
@@ -165,16 +165,16 @@ JUNO_API void JunoSetVertexBuffers(JunoDevice* pDevice, c_uint mStartSlot, c_uin
 
 JUNO_API void JunoSetIndexBuffer(JunoDevice* pDevice, JunoBuffer* pBuffer, JunoIndexFormat mFormat, c_uint mOffset)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
 	DXGI_FORMAT format = (mFormat == JunoIndexFormat_UInt16) ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
 	pDevice->mContext->IASetIndexBuffer(pBuffer ? pBuffer->mHandle.Get() : nullptr, format, mOffset);
 }
 
 JUNO_API void JunoSetConstantBuffers(JunoDevice* pDevice, JunoShaderStage mStage, c_uint mStartSlot, c_uint mCount, JunoBuffer* const* ppBuffers)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
-	JUNO_REQUIRE_VOID(mStartSlot + mCount <= JUNO_MAX_CB_SLOTS);
-	JUNO_REQUIRE_VOID(mCount == 0 || ppBuffers != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(mStartSlot + mCount <= JUNO_MAX_CB_SLOTS);
+	JUNO_ASSERT(mCount == 0 || ppBuffers != nullptr);
 
 	ID3D11Buffer* buffers[JUNO_MAX_CB_SLOTS] = {};
 	for (c_uint i = 0; i < mCount; ++i)
@@ -185,9 +185,9 @@ JUNO_API void JunoSetConstantBuffers(JunoDevice* pDevice, JunoShaderStage mStage
 
 JUNO_API void JunoSetBufferResources(JunoDevice* pDevice, JunoShaderStage mStage, c_uint mStartSlot, c_uint mCount, JunoBuffer* const* ppBuffers)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
-	JUNO_REQUIRE_VOID(mStartSlot + mCount <= JUNO_MAX_SRV_SLOTS);
-	JUNO_REQUIRE_VOID(mCount == 0 || ppBuffers != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(mStartSlot + mCount <= JUNO_MAX_SRV_SLOTS);
+	JUNO_ASSERT(mCount == 0 || ppBuffers != nullptr);
 
 	ID3D11ShaderResourceView* views[JUNO_MAX_SRV_SLOTS] = {};
 	for (c_uint i = 0; i < mCount; ++i)
@@ -198,9 +198,9 @@ JUNO_API void JunoSetBufferResources(JunoDevice* pDevice, JunoShaderStage mStage
 
 JUNO_API void JunoSetUnorderedAccessBuffers(JunoDevice* pDevice, c_uint mStartSlot, c_uint mCount, JunoBuffer* const* ppBuffers)
 {
-	JUNO_REQUIRE_VOID(pDevice != nullptr);
-	JUNO_REQUIRE_VOID(mStartSlot + mCount <= JUNO_MAX_UAV_SLOTS);
-	JUNO_REQUIRE_VOID(mCount == 0 || ppBuffers != nullptr);
+	JUNO_ASSERT(pDevice != nullptr);
+	JUNO_ASSERT(mStartSlot + mCount <= JUNO_MAX_UAV_SLOTS);
+	JUNO_ASSERT(mCount == 0 || ppBuffers != nullptr);
 
 	ID3D11UnorderedAccessView* views[JUNO_MAX_UAV_SLOTS] = {};
 	for (c_uint i = 0; i < mCount; ++i)
