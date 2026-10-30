@@ -107,30 +107,6 @@ JUNO_API void JunoDestroyDevice(JunoDevice* pDevice)
 	delete pDevice;
 }
 
-JUNO_API c_uint JunoGetFeatureLevel(JunoDevice* pDevice)
-{
-	JUNO_ASSERT(pDevice != nullptr);
-	return (c_uint)pDevice->mFeatureLevel;
-}
-
-JUNO_API c_bool JunoIsTearingSupported(JunoDevice* pDevice)
-{
-	JUNO_ASSERT(pDevice != nullptr);
-	return pDevice->bTearingSupported;
-}
-
-JUNO_API void* JunoGetNativeDevice(JunoDevice* pDevice)
-{
-	JUNO_ASSERT(pDevice != nullptr);
-	return pDevice->mDevice.Get();
-}
-
-JUNO_API void* JunoGetNativeContext(JunoDevice* pDevice)
-{
-	JUNO_ASSERT(pDevice != nullptr, nullptr);
-	return pDevice->mContext.Get();
-}
-
 JUNO_API void JunoFlush(JunoDevice* pDevice)
 {
 	JUNO_ASSERT(pDevice != nullptr);

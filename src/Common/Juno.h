@@ -473,10 +473,6 @@ JUNO_API void JunoClearLastError(void);
 
 JUNO_API JunoErrorCode JunoCreateDevice(const JunoDeviceCreateInfo* pDesc, JunoDevice** ppDevice);
 JUNO_API void JunoDestroyDevice(JunoDevice* pDevice);
-JUNO_API c_uint JunoGetFeatureLevel(JunoDevice* pDevice);
-JUNO_API c_bool JunoIsTearingSupported(JunoDevice* pDevice);
-JUNO_API void* JunoGetNativeDevice(JunoDevice* pDevice);    /* ID3D11Device* */
-JUNO_API void* JunoGetNativeContext(JunoDevice* pDevice);   /* ID3D11DeviceContext* */
 JUNO_API void JunoFlush(JunoDevice* pDevice);
 JUNO_API void JunoClearState(JunoDevice* pDevice);
 

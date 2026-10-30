@@ -39,18 +39,6 @@ static class Juno
 	[CallingConvention(.Cdecl), LinkName("JunoDestroyDevice")]
 	extern static public void DestroyDevice(Device* pDevice);
 
-	[CallingConvention(.Cdecl), LinkName("JunoGetFeatureLevel")]
-	extern static public c_uint GetFeatureLevel(Device* pDevice);
-
-	[CallingConvention(.Cdecl), LinkName("JunoIsTearingSupported")]
-	extern static public c_bool IsTearingSupported(Device* pDevice);
-
-	[CallingConvention(.Cdecl), LinkName("JunoGetNativeDevice")]
-	extern static public void* GetNativeDevice(Device* pDevice);
-
-	[CallingConvention(.Cdecl), LinkName("JunoGetNativeContext")]
-	extern static public void* GetNativeContext(Device* pDevice);
-
 	[CallingConvention(.Cdecl), LinkName("JunoFlush")]
 	extern static public void Flush(Device* pDevice);
 
