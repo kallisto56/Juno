@@ -816,8 +816,8 @@ float4 PSMain(PSInput input) : SV_TARGET
 			let top = Math.Clamp((int32)Math.Floor(mClip.mRect.mY), 0, mTargetHeight);
 			let right = Math.Clamp((int32)Math.Ceiling(mClip.mRect.mRight), 0, mTargetWidth);
 			let bottom = Math.Clamp((int32)Math.Ceiling(mClip.mRect.mBottom), 0, mTargetHeight);
-			Region region = Region(left, top, Math.Max(left, right), Math.Max(top, bottom));
-			Juno.SetScissorRects(mDevice, 1, &region);
+			Scissor scissor = Scissor(left, top, Math.Max(left, right), Math.Max(top, bottom));
+			Juno.SetScissorRects(mDevice, &scissor, 1);
 		}
 	}
 

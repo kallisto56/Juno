@@ -33,12 +33,12 @@ JUNO_API void JunoSetViewports(JunoDevice* pDevice, c_uint count, const JunoView
 	pDevice->mContext->RSSetViewports(count, reinterpret_cast<const D3D11_VIEWPORT*>(pViewports));
 }
 
-JUNO_API void JunoSetScissorRects(JunoDevice* pDevice, c_uint count, const JunoRegion* pRects)
+JUNO_API void JunoSetScissorRects(JunoDevice* pDevice, const JunoScissor* pScissors, c_uint count)
 {
 	JUNO_ASSERT(pDevice != nullptr);
 	JUNO_ASSERT(count > 0 && count <= D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE);
-	JUNO_ASSERT(pRects != nullptr);
-	pDevice->mContext->RSSetScissorRects(count, reinterpret_cast<const D3D11_RECT*>(pRects));
+	JUNO_ASSERT(pScissors != nullptr);
+	pDevice->mContext->RSSetScissorRects(count, reinterpret_cast<const D3D11_RECT*>(pScissors));
 }
 
 JUNO_API void JunoSetPrimitiveTopology(JunoDevice* pDevice, JunoPrimitiveTopology topology)

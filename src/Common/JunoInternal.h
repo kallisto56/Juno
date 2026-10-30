@@ -69,6 +69,7 @@ static_assert((int)JunoAddressMode_MirrorOnce == (int)D3D11_TEXTURE_ADDRESS_MIRR
 static_assert((int)JunoPixelFormat_B8G8R8A8_UNorm == (int)DXGI_FORMAT_B8G8R8A8_UNORM && (int)JunoPixelFormat_BC7_UNorm_SRGB == (int)DXGI_FORMAT_BC7_UNORM_SRGB, "Format mismatch");
 static_assert(sizeof(JunoViewport) == sizeof(D3D11_VIEWPORT), "Viewport size mismatch");
 static_assert(sizeof(JunoRegion) == sizeof(D3D11_RECT), "Region size mismatch");
+static_assert(sizeof(JunoScissor) == sizeof(D3D11_RECT), "Scissor size mismatch");
 
 /* ------------------------------------------------------------------------- */
 /* Object definitions                                                        */

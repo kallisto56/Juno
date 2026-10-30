@@ -407,6 +407,14 @@ typedef struct JunoViewport
 	float mMaxDepth;
 } JunoViewport;
 
+typedef struct JunoScissor
+{
+	c_int mLeft;
+	c_int mTop;
+	c_int mRight;
+	c_int mBottom;
+} JunoScissor;
+
 typedef struct JunoSamplerCreateInfo
 {
 	JunoDevice* mDevice;
@@ -622,7 +630,7 @@ JUNO_API void JunoSetDepthStencilState(JunoDevice* pDevice, JunoDepthStencilStat
 
 JUNO_API void JunoSetRenderTargets(JunoDevice* pDevice, c_uint count, JunoTexture* const* ppColorTargets, JunoTexture* pDepthTarget);
 JUNO_API void JunoSetViewports(JunoDevice* pDevice, c_uint count, const JunoViewport* pViewports);
-JUNO_API void JunoSetScissorRects(JunoDevice* pDevice, c_uint count, const JunoRegion* pRects);
+JUNO_API void JunoSetScissorRects(JunoDevice* pDevice, const JunoScissor* pScissors, c_uint count);
 JUNO_API void JunoSetPrimitiveTopology(JunoDevice* pDevice, JunoPrimitiveTopology topology);
 
 JUNO_API void JunoDraw(JunoDevice* pDevice, c_uint vertexCount, c_uint startVertex);

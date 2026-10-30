@@ -223,7 +223,7 @@ static class Juno
 	extern static public void SetViewports(Device* pDevice, c_uint count, Viewport* pViewports);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetScissorRects")]
-	extern static public void SetScissorRects(Device* pDevice, c_uint count, Region* pRects);
+	extern static public void SetScissorRects(Device* pDevice, Scissor* pScissors, c_uint count);
 
 	[CallingConvention(.Cdecl), LinkName("JunoSetPrimitiveTopology")]
 	extern static public void SetPrimitiveTopology(Device* pDevice, PrimitiveTopology topology);
