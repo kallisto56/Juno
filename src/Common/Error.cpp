@@ -63,3 +63,27 @@ JUNO_API void JunoClearLastError(void)
 	sLastHResult = S_OK;
 	sLastMessage[0] = '\0';
 }
+
+JUNO_API void JunoGetInteropLayoutSizes(JunoInteropLayoutSizes* pSizes)
+{
+	JUNO_ASSERT(pSizes != nullptr);
+
+	pSizes->mJunoDeviceCreateInfo = sizeof(JunoDeviceCreateInfo);
+	pSizes->mJunoShaderCreateInfo = sizeof(JunoShaderCreateInfo);
+	pSizes->mJunoShaderCompileFromFileInfo = sizeof(JunoShaderCompileFromFileInfo);
+	pSizes->mJunoShaderCompileInfo = sizeof(JunoShaderCompileInfo);
+	pSizes->mJunoSwapChainCreateInfo = sizeof(JunoSwapChainCreateInfo);
+	pSizes->mJunoBufferCreateInfo = sizeof(JunoBufferCreateInfo);
+	pSizes->mJunoTextureCreateInfo = sizeof(JunoTextureCreateInfo);
+	pSizes->mJunoRegion = sizeof(JunoRegion);
+	pSizes->mJunoViewport = sizeof(JunoViewport);
+	pSizes->mJunoScissor = sizeof(JunoScissor);
+	pSizes->mJunoSamplerCreateInfo = sizeof(JunoSamplerCreateInfo);
+	pSizes->mJunoInputElementDescription = sizeof(JunoInputElementDescription);
+	pSizes->mJunoBlendDesc = sizeof(JunoBlendDesc);
+	pSizes->mJunoRasterizerDesc = sizeof(JunoRasterizerDesc);
+	pSizes->mJunoStencilOpDesc = sizeof(JunoStencilOpDesc);
+	pSizes->mJunoDepthStencilCreateInfo = sizeof(JunoDepthStencilCreateInfo);
+
+	pSizes->mJunoInteropLayoutSizes = sizeof(JunoInteropLayoutSizes);
+}

@@ -131,6 +131,9 @@ class Application
 
 	bool Initialize()
 	{
+		Juno.SetFatalErrorHandler(=> Juno.DefaultFatalError);
+		Juno.ValidateInteropLayout();
+
 		if (mSettings.bDpiAware)
 			Window.EnableDpiAwareness();
 

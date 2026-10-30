@@ -33,6 +33,49 @@ static class Juno
 	[CallingConvention(.Cdecl), LinkName("JunoClearLastError")]
 	extern static public void ClearLastError();
 
+	[CallingConvention(.Cdecl), LinkName("JunoGetInteropLayoutSizes")]
+	extern static public void GetInteropLayoutSizes(InteropLayoutSizes* pSizes);
+
+	static public void ValidateInteropLayout()
+	{
+		#if DEBUG
+		var e = InteropLayoutSizes();
+		Juno.GetInteropLayoutSizes(&e);
+
+		var bHasErrors = false;
+
+		void Assert(c_size bfSize, c_size cppSize, String bfName, String cppName)
+		{
+			if ((uint)bfSize != (uint)cppSize)
+			{
+				bHasErrors = true;
+				Debug.WriteLine(scope $"ERROR: sizeof({bfName}):{bfSize} and sizeof({cppName}):{cppSize} do not match");
+			}
+		}
+
+		Assert(sizeof(Device.CreateInfo), e.mJunoDeviceCreateInfo, "Device.CreateInfo", "JunoDeviceCreateInfo");
+		Assert(sizeof(Shader.CreateInfo), e.mJunoShaderCreateInfo, "Shader.CreateInfo", "JunoShaderCreateInfo");
+		Assert(sizeof(Shader.CompileFromFileInfo), e.mJunoShaderCompileFromFileInfo, "Shader.CompileFromFileInfo", "JunoShaderCompileFromFileInfo");
+		Assert(sizeof(Shader.CompileInfo), e.mJunoShaderCompileInfo, "Shader.CompileInfo", "JunoShaderCompileInfo");
+		Assert(sizeof(SwapChain.CreateInfo), e.mJunoSwapChainCreateInfo, "SwapChain.CreateInfo", "JunoSwapChainCreateInfo");
+		Assert(sizeof(Buffer.CreateInfo), e.mJunoBufferCreateInfo, "Buffer.CreateInfo", "JunoBufferCreateInfo");
+		Assert(sizeof(Texture.CreateInfo), e.mJunoTextureCreateInfo, "Texture.CreateInfo", "JunoTextureCreateInfo");
+		Assert(sizeof(Region), e.mJunoRegion, "Region", "JunoRegion");
+		Assert(sizeof(Viewport), e.mJunoViewport, "Viewport", "JunoViewport");
+		Assert(sizeof(Scissor), e.mJunoScissor, "Scissor", "JunoScissor");
+		Assert(sizeof(Sampler.CreateInfo), e.mJunoSamplerCreateInfo, "Sampler.CreateInfo", "JunoSamplerCreateInfo");
+		Assert(sizeof(InputElementDescription), e.mJunoInputElementDescription, "InputElementDescription", "JunoInputElementDescription");
+		Assert(sizeof(BlendDesc), e.mJunoBlendDesc, "BlendDesc", "JunoBlendDesc");
+		Assert(sizeof(RasterizerDesc), e.mJunoRasterizerDesc, "RasterizerDesc", "JunoRasterizerDesc");
+		Assert(sizeof(StencilOpDesc), e.mJunoStencilOpDesc, "StencilOpDesc", "JunoStencilOpDesc");
+		Assert(sizeof(DepthStencilState.CreateInfo), e.mJunoDepthStencilCreateInfo, "DepthStencilState.CreateInfo", "JunoDepthStencilCreateInfo");
+
+		Assert(sizeof(InteropLayoutSizes), e.mJunoInteropLayoutSizes, "InteropLayoutSizes", "JunoInteropLayoutSizes");
+
+		if (bHasErrors) Runtime.FatalError();
+		#endif
+	}
+
 	[CallingConvention(.Cdecl), LinkName("JunoCreateDevice")]
 	extern static public ErrorCode CreateDevice(Device.CreateInfo* pCreateInfo, out Device* ppDevice);
 

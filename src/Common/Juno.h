@@ -492,6 +492,27 @@ typedef struct JunoDepthStencilCreateInfo
 	JunoStencilOpDesc mBackFace;
 } JunoDepthStencilCreateInfo;
 
+typedef struct JunoInteropLayoutSizes
+{
+	c_uint mJunoDeviceCreateInfo;
+	c_uint mJunoShaderCreateInfo;
+	c_uint mJunoShaderCompileFromFileInfo;
+	c_uint mJunoShaderCompileInfo;
+	c_uint mJunoSwapChainCreateInfo;
+	c_uint mJunoBufferCreateInfo;
+	c_uint mJunoTextureCreateInfo;
+	c_uint mJunoRegion;
+	c_uint mJunoViewport;
+	c_uint mJunoScissor;
+	c_uint mJunoSamplerCreateInfo;
+	c_uint mJunoInputElementDescription;
+	c_uint mJunoBlendDesc;
+	c_uint mJunoRasterizerDesc;
+	c_uint mJunoStencilOpDesc;
+	c_uint mJunoDepthStencilCreateInfo;
+	c_uint mJunoInteropLayoutSizes;
+} JunoInteropLayoutSizes;
+
 /* ------------------------------------------------------------------------- */
 /* Error handling                                                            */
 /* ------------------------------------------------------------------------- */
@@ -501,6 +522,7 @@ JUNO_API const c_char* JunoGetLastErrorMessage(void);
 JUNO_API JunoErrorCode JunoGetLastErrorCode(void);
 JUNO_API c_int JunoGetLastErrorHResult(void);
 JUNO_API void JunoClearLastError(void);
+JUNO_API void JunoGetInteropLayoutSizes(JunoInteropLayoutSizes* pSizes);
 
 /* ------------------------------------------------------------------------- */
 /* Device                                                                    */
