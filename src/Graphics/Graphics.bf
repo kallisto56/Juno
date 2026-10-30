@@ -760,8 +760,8 @@ float4 PSMain(PSInput input) : SV_TARGET
 	void ApplyPipeline(PrimitiveTopology topology)
 	{
 		let shader = (mShader != null) ? mShader : mDefaultShader;
-		Juno.SetShader(mDevice, .Vertex, shader.mVertexShader);
-		Juno.SetShader(mDevice, .Pixel, shader.mPixelShader);
+		Juno.SetShader(mDevice, shader.mVertexShader);
+		Juno.SetShader(mDevice, shader.mPixelShader);
 		Juno.SetInputLayout(mDevice, shader.mInputLayout);
 		Juno.SetPrimitiveTopology(mDevice, topology);
 

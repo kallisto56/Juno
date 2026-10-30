@@ -588,7 +588,8 @@ JUNO_API c_size JunoGetBlobSize(JunoBlob* pBlob);
 JUNO_API void JunoDestroyBlob(JunoBlob* pBlob);
 JUNO_API JunoErrorCode JunoCreateShader(JunoShaderCreateInfo* pCreateInfo, JunoShader** ppShader);
 JUNO_API void JunoDestroyShader(JunoShader* pShader);
-JUNO_API void JunoSetShader(JunoDevice* pDevice, JunoShaderStage mStage, JunoShader* pShader); /* NULL unbinds */
+JUNO_API void JunoSetShader(JunoDevice* pDevice, JunoShader* pShader);
+JUNO_API void JunoUnsetShader(JunoDevice* pDevice, JunoShaderStage mStage);
 
 /* ------------------------------------------------------------------------- */
 /* Input layout                                                              */

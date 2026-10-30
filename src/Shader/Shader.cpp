@@ -137,20 +137,35 @@ JUNO_API void JunoDestroyShader(JunoShader* pShader)
 	delete pShader;
 }
 
-JUNO_API void JunoSetShader(JunoDevice* pDevice, JunoShaderStage mStage, JunoShader* pShader)
+JUNO_API void JunoSetShader(JunoDevice* pDevice, JunoShader* pShader)
 {
 	JUNO_ASSERT(pDevice != nullptr);
-	JUNO_ASSERT(pShader == nullptr || pShader->mStage == mStage);
+	JUNO_ASSERT(pShader != nullptr);
 
-	ID3D11DeviceChild* pNative = pShader ? pShader->mShader.Get() : nullptr;
+	ID3D11DeviceChild* pNative = pShader->mShader.Get();
 	ID3D11DeviceContext* pCtx = pDevice->mContext.Get();
 
-	switch (mStage)
+	switch (pShader->mStage)
 	{
 	case JunoShaderStage_Vertex: pCtx->VSSetShader(static_cast<ID3D11VertexShader*>(pNative), nullptr, 0); break;
 	case JunoShaderStage_Pixel: pCtx->PSSetShader(static_cast<ID3D11PixelShader*>(pNative), nullptr, 0); break;
 	case JunoShaderStage_Geometry: pCtx->GSSetShader(static_cast<ID3D11GeometryShader*>(pNative), nullptr, 0); break;
 	case JunoShaderStage_Compute: pCtx->CSSetShader(static_cast<ID3D11ComputeShader*>(pNative), nullptr, 0); break;
+	default: RuntimeFatalError("Unknown shader stage", __FILE__, __LINE__); break;
+	}
+}
+
+JUNO_API void JunoUnsetShader(JunoDevice* pDevice, JunoShaderStage mStage)
+{
+	JUNO_ASSERT(pDevice != nullptr);
+
+	ID3D11DeviceContext* pCtx = pDevice->mContext.Get();
+	switch (mStage)
+	{
+	case JunoShaderStage_Vertex: pCtx->VSSetShader(nullptr, nullptr, 0); break;
+	case JunoShaderStage_Pixel: pCtx->PSSetShader(nullptr, nullptr, 0); break;
+	case JunoShaderStage_Geometry: pCtx->GSSetShader(nullptr, nullptr, 0); break;
+	case JunoShaderStage_Compute: pCtx->CSSetShader(nullptr, nullptr, 0); break;
 	default: RuntimeFatalError("Unknown shader stage", __FILE__, __LINE__); break;
 	}
 }
