@@ -208,7 +208,7 @@ static class Juno
 	extern static public void SetRasterizerState(Device* pDevice, RasterizerState* pState);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateDepthStencilState")]
-	extern static public ErrorCode CreateDepthStencilState(Device* pDevice, DepthStencilDesc* pDesc, out DepthStencilState* ppState);
+	extern static public ErrorCode CreateDepthStencilState(DepthStencilState.CreateInfo* pCreateInfo, out DepthStencilState* ppState);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDestroyDepthStencilState")]
 	extern static public void DestroyDepthStencilState(DepthStencilState* pState);

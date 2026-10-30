@@ -471,8 +471,9 @@ typedef struct JunoStencilOpDesc
 	JunoComparisonFunc mStencilFunc;
 } JunoStencilOpDesc;
 
-typedef struct JunoDepthStencilDesc
+typedef struct JunoDepthStencilCreateInfo
 {
+	JunoDevice* mDevice;
 	c_bool bDepthEnable;
 	c_bool bDepthWriteEnable;
 	JunoComparisonFunc mDepthFunc;
@@ -481,7 +482,7 @@ typedef struct JunoDepthStencilDesc
 	c_uchar mStencilWriteMask;
 	JunoStencilOpDesc mFrontFace;
 	JunoStencilOpDesc mBackFace;
-} JunoDepthStencilDesc;
+} JunoDepthStencilCreateInfo;
 
 /* ------------------------------------------------------------------------- */
 /* Error handling                                                            */
@@ -611,7 +612,7 @@ JUNO_API JunoErrorCode JunoCreateRasterizerState(JunoDevice* pDevice, const Juno
 JUNO_API void JunoDestroyRasterizerState(JunoRasterizerState* pState);
 JUNO_API void JunoSetRasterizerState(JunoDevice* pDevice, JunoRasterizerState* pState);
 
-JUNO_API JunoErrorCode JunoCreateDepthStencilState(JunoDevice* pDevice, const JunoDepthStencilDesc* pDesc, JunoDepthStencilState** ppState);
+JUNO_API JunoErrorCode JunoCreateDepthStencilState(const JunoDepthStencilCreateInfo* pCreateInfo, JunoDepthStencilState** ppState);
 JUNO_API void JunoDestroyDepthStencilState(JunoDepthStencilState* pState);
 JUNO_API void JunoSetDepthStencilState(JunoDevice* pDevice, JunoDepthStencilState* pState, c_uint stencilRef);
 

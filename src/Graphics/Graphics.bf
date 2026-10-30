@@ -268,7 +268,8 @@ float4 PSMain(PSInput input) : SV_TARGET
 		// Depth
 		for (int i < DepthMode.cCount)
 		{
-			DepthStencilDesc dd = .();
+			DepthStencilState.CreateInfo dd = .();
+			dd.mDevice = mDevice;
 			switch ((DepthMode)i)
 			{
 			case .None:
@@ -283,7 +284,7 @@ float4 PSMain(PSInput input) : SV_TARGET
 				dd.bDepthWriteEnable = false;
 				dd.mDepthFunc = .LessEqual;
 			}
-			if (!JunoLog.Check(Juno.CreateDepthStencilState(mDevice, &dd, var state), "CreateDepthStencilState"))
+			if (!JunoLog.Check(Juno.CreateDepthStencilState(&dd, var state), "CreateDepthStencilState"))
 				return false;
 			mDepthStates[i] = state;
 		}
