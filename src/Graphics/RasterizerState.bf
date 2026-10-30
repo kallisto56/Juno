@@ -1,10 +1,13 @@
 namespace Juno;
 
+
 using System;
+using System.Diagnostics;
 using System.Interop;
 
-// Opaque handle. Only ever used through pointers (RasterizerState*).
+
 [CRepr]
 struct RasterizerState
 {
+	public ComPtr<ID3D11RasterizerState> mState;
 }

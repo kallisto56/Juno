@@ -8,6 +8,9 @@ using System.Interop;
 [CRepr]
 struct Shader
 {
+	public ShaderStage mStage;
+	public ComPtr<ID3D11DeviceChild> mShader;
+
 	[CRepr]
 	public struct CompileInfo
 	{
