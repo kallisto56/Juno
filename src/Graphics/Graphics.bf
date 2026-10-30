@@ -142,7 +142,7 @@ float4 PSMain(PSInput input) : SV_TARGET
 	// Camera / constants
 	Matrix4x4 mViewProjection = Matrix4x4.sIdentity;
 	Matrix4x4 mWorld = Matrix4x4.sIdentity;
-	Color mObjectTint = Colors.sWhite;
+	Color mObjectTint = Color.cWhite;
 	bool bCustomProjection;
 	bool bConstantsDirty = true;
 
@@ -150,7 +150,7 @@ float4 PSMain(PSInput input) : SV_TARGET
 	float mM11 = 1, mM12 = 0, mM21 = 0, mM22 = 1, mM31 = 0, mM32 = 0;
 	Matrix3x2 mTransform = Matrix3x2.sIdentity;
 	List<Matrix3x2> mTransformStack = new .() ~ delete _;
-	Color mTint = Colors.sWhite;
+	Color mTint = Color.cWhite;
 	List<Color> mTintStack = new .() ~ delete _;
 	ClipState mClip;
 	List<ClipState> mClipStack = new .() ~ delete _;
@@ -188,8 +188,8 @@ float4 PSMain(PSInput input) : SV_TARGET
 		info.mDevice = device;
 		info.mUsage = .Dynamic;
 		info.mCpuAccessFlags = .Write;
-		info.mSize = cMaxVertices * Vertex.cSize;
-		info.mStride = Vertex.cSize;
+		info.mSize = cMaxVertices * sizeof(Vertex);
+		info.mStride = sizeof(Vertex);
 		info.mBindFlags = .VertexBuffer;
 		if (!JunoLog.Check(Juno.CreateBuffer(&info, var vb), "CreateBuffer (dynamic vertices)"))
 			return false;
@@ -376,14 +376,14 @@ float4 PSMain(PSInput input) : SV_TARGET
 		mSamplerKind = .LinearClamp;
 		bWireframe = false;
 		mWorld = Matrix4x4.sIdentity;
-		mObjectTint = Colors.sWhite;
+		mObjectTint = Color.cWhite;
 		bCustomProjection = false;
 		bConstantsDirty = true;
 
 		mTransformStack.Clear();
 		SetTransformInternal(Matrix3x2.sIdentity);
 		mTintStack.Clear();
-		mTint = Colors.sWhite;
+		mTint = Color.cWhite;
 		mClipStack.Clear();
 		mClip = default;
 
@@ -639,7 +639,7 @@ float4 PSMain(PSInput input) : SV_TARGET
 	public GraphicsScope PushTint(Color color)
 	{
 		mTintStack.Add(mTint);
-		mTint = Colors.Multiply(mTint, color);
+		mTint = mTint * color;
 		return GraphicsScope(this, .Tint);
 	}
 
@@ -680,14 +680,15 @@ float4 PSMain(PSInput input) : SV_TARGET
 	// Batching internals
 	// ---------------------------------------------------------------------------------------------------------
 
-	Vertex MakeVertex(float x, float y, float u, float v, uint32 color)
+	Vertex MakeVertex(float x, float y, float u, float v, Color color)
 	{
 		return Vertex(x * mM11 + y * mM21 + mM31, x * mM12 + y * mM22 + mM32, 0, u, v, color);
 	}
 
-	uint32 TintColor(Color color)
+	Color TintColor(Color color)
 	{
-		return Colors.PackRGBA(Colors.Multiply(color, mTint));
+		return color * mTint;
+		//return Colors.PackRGBA(Colors.Multiply(color, mTint));
 	}
 
 	void SetBatchTexture(Texture2D texture)
@@ -741,7 +742,7 @@ float4 PSMain(PSInput input) : SV_TARGET
 
 		ApplyPipeline(.TriangleList);
 		Buffer* vb = mDynamicVB;
-		c_uint stride = Vertex.cSize;
+		c_uint stride = sizeof(Vertex);
 		c_uint offset = 0;
 		Juno.SetVertexBuffers(mDevice, 0, 1, &vb, &stride, &offset);
 		Juno.SetIndexBuffer(mDevice, mDynamicIB, .UInt32, 0);
@@ -825,7 +826,7 @@ float4 PSMain(PSInput input) : SV_TARGET
 
 	public void DrawMesh(Mesh mesh, Matrix4x4 world, Texture2D texture = null)
 	{
-		DrawMesh(mesh, world, texture, Colors.sWhite);
+		DrawMesh(mesh, world, texture, Color.cWhite);
 	}
 
 	// Draws a static mesh immediately with the current shader / camera / depth / cull state.
@@ -858,7 +859,7 @@ float4 PSMain(PSInput input) : SV_TARGET
 
 		mTextures[0] = savedTexture;
 		mWorld = Matrix4x4.sIdentity;
-		mObjectTint = Colors.sWhite;
+		mObjectTint = Color.cWhite;
 		bConstantsDirty = true;
 	}
 
@@ -969,7 +970,7 @@ float4 PSMain(PSInput input) : SV_TARGET
 
 	public void DrawTexture(Texture2D texture, float x, float y, float width, float height)
 	{
-		DrawTexture(texture, x, y, width, height, Colors.sWhite);
+		DrawTexture(texture, x, y, width, height, Color.cWhite);
 	}
 
 	public void DrawTexture(Texture2D texture, float x, float y, float width, float height, Color tint)

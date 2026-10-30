@@ -46,7 +46,7 @@ class Application
 	public InputState mInput;
 	public WidgetRoot mRoot;
 	public Font mDefaultFont;
-	public Color mClearColor = Colors.Make(24, 26, 34, 255);
+	public Color mClearColor = Color(24, 26, 34, 255);
 
 	public double mTime;                    // seconds since Run()
 	public float mDeltaTime;                // seconds of the last frame

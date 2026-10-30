@@ -84,9 +84,10 @@ class Mesh
 			.(0, 1, 0, 0, 0, 1),    // top
 			.(0, -1, 0, 0, 0, -1)   // bottom
 		);
-		uint32[6] colors = .(
-			Colors.PackRGBA(Colors.sRed), Colors.PackRGBA(Colors.sGreen), Colors.PackRGBA(Colors.sBlue),
-			Colors.PackRGBA(Colors.sYellow), Colors.PackRGBA(Colors.sCyan), Colors.PackRGBA(Colors.sMagenta));
+		Color[6] colors = .(
+			Color.cRed, Color.cGreen, Color.cBlue,
+			Color.cYellow, Color.cCyan, Color.cMagenta
+		);
 
 		Vertex[24] vertices = default;
 		uint32[36] indices = default;
