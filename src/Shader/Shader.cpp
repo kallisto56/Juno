@@ -151,6 +151,6 @@ JUNO_API void JunoSetShader(JunoDevice* pDevice, JunoShaderStage mStage, JunoSha
 	case JunoShaderStage_Pixel: pCtx->PSSetShader(static_cast<ID3D11PixelShader*>(pNative), nullptr, 0); break;
 	case JunoShaderStage_Geometry: pCtx->GSSetShader(static_cast<ID3D11GeometryShader*>(pNative), nullptr, 0); break;
 	case JunoShaderStage_Compute: pCtx->CSSetShader(static_cast<ID3D11ComputeShader*>(pNative), nullptr, 0); break;
-	default: assert(false); break;
+	default: RuntimeFatalError("Unknown shader stage", __FILE__, __LINE__); break;
 	}
 }
