@@ -23,9 +23,16 @@ using Microsoft::WRL::ComPtr;
 /* Error helpers (Error.cpp)                                                 */
 /* ------------------------------------------------------------------------- */
 
+JUNO_API JunoErrorCode JunoSetFatalErrorHandler(JunoFatalErrorHandlerFunc callback);
 JunoErrorCode JunoSetError(JunoErrorCode code, HRESULT hr, const char* pFormat, ...);
 /* Maps device removed/reset to JunoErrorCode_DeviceLost, otherwise returns `fallback`. */
 JunoErrorCode JunoFailHResult(JunoErrorCode fallback, HRESULT hr, const char* pWhat);
+
+extern JunoFatalErrorHandlerFunc RuntimeFatalError;
+
+#define JUNO_ASSERT(condition) \
+if (!(condition)) \
+	RuntimeFatalError(#condition, __FILE__, __LINE__);
 
 /* Blunt user mistakes: assert in debug, return InvalidArgument in release. */
 #define JUNO_REQUIRE(cond) \

@@ -30,6 +30,12 @@ typedef struct JunoDepthStencilState JunoDepthStencilState;
 typedef struct JunoFence JunoFence;
 
 /* ------------------------------------------------------------------------- */
+/* Callbacks                                                                 */
+/* ------------------------------------------------------------------------- */
+
+typedef void (*JunoFatalErrorHandlerFunc)(const char* message, const char* file, c_int line);
+
+/* ------------------------------------------------------------------------- */
 /* Enums. Values of most enums match the D3D11/DXGI ones and are cast        */
 /* directly (see static_asserts in JunoInternal.h).                          */
 /* ------------------------------------------------------------------------- */

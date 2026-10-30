@@ -5,6 +5,19 @@ static thread_local JunoErrorCode sLastCode = JunoErrorCode_Ok;
 static thread_local HRESULT sLastHResult = S_OK;
 static thread_local char sLastMessage[4096] = "";
 
+JunoFatalErrorHandlerFunc RuntimeFatalError = nullptr;
+
+
+JUNO_API JunoErrorCode JunoSetFatalErrorHandler(JunoFatalErrorHandlerFunc callback)
+{
+	if (callback == nullptr)
+		return JunoErrorCode_InvalidArgument;
+
+	RuntimeFatalError = callback;
+
+	return JunoErrorCode_Ok;
+}
+
 JunoErrorCode JunoSetError(JunoErrorCode code, HRESULT hr, const char* pFormat, ...)
 {
 	va_list args;

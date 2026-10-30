@@ -7,6 +7,20 @@ using System.Interop;
 
 static class Juno
 {
+	public function void FatalError(c_char* message, c_char* file, c_int line);
+
+	[AlwaysInclude]
+	static public void DefaultFatalError(c_char* message, c_char* file, c_int line)
+	{
+		var failStr = scope String()..Append(StringView(message), " at line ");
+		line.ToString(failStr);
+		failStr.Append(" in ", StringView(file));
+		Internal.FatalError(failStr, 1);
+	}
+
+	[CallingConvention(.Cdecl), LinkName("JunoSetFatalErrorHandler")]
+	extern static public ErrorCode SetFatalErrorHandler(FatalError callback);
+
 	[CallingConvention(.Cdecl), LinkName("JunoGetLastErrorMessage")]
 	extern static public c_char* GetLastErrorMessage();
 
