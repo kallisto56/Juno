@@ -319,6 +319,32 @@ typedef struct JunoDeviceCreateInfo
 	c_int mAdapterIndex;    /* >= 0 picks an adapter by DXGI index, < 0 uses the default hardware adapter. */
 } JunoDeviceCreateInfo;
 
+typedef struct JunoShaderCreateInfo
+{
+	JunoDevice* mDevice;
+	JunoShaderStage mStage;
+	const void* mBytecode;
+	c_size mBytecodeSize;
+} JunoShaderCreateInfo;
+
+typedef struct JunoShaderCompileFromFileInfo
+{
+	const c_wchar* mPath;
+	const c_char* mEntryPoint;
+	const c_char* mTarget;
+	c_uint mCompileFlags;
+} JunoShaderCompileFromFileInfo;
+
+typedef struct JunoShaderCompileInfo
+{
+	const c_char* mSource;
+	c_size mSourceLength;
+	const c_char* mSourceName;
+	const c_char* mEntryPoint;
+	const c_char* mTarget;
+	c_uint mCompileFlags;
+} JunoShaderCompileInfo;
+
 typedef struct JunoSwapChainCreateInfo
 {
 	JunoDevice* mDevice;
@@ -555,12 +581,12 @@ JUNO_API void JunoSetSamplers(JunoDevice* pDevice, JunoShaderStage mStage, c_uin
 /* Shaders                                                                   */
 /* ------------------------------------------------------------------------- */
 
-JUNO_API JunoErrorCode JunoCompileShader(const c_char* pSource, c_size mSourceLength, const c_char* pSourceName, const c_char* pEntryPoint, const c_char* pTarget, c_uint mCompileFlags, JunoBlob** ppBlob);
-JUNO_API JunoErrorCode JunoCompileShaderFromFile(const c_wchar* pPath, const c_char* pEntryPoint, const c_char* pTarget, c_uint mCompileFlags, JunoBlob** ppBlob);
+JUNO_API JunoErrorCode JunoCompileShader(const JunoShaderCompileInfo* pCompileInfo, JunoBlob** ppBlob);
+JUNO_API JunoErrorCode JunoCompileShaderFromFile(const JunoShaderCompileFromFileInfo* pCompileInfo, JunoBlob** ppBlob);
 JUNO_API const void* JunoGetBlobData(JunoBlob* pBlob);
 JUNO_API c_size JunoGetBlobSize(JunoBlob* pBlob);
 JUNO_API void JunoDestroyBlob(JunoBlob* pBlob);
-JUNO_API JunoErrorCode JunoCreateShader(JunoDevice* pDevice, JunoShaderStage mStage, const void* pBytecode, c_size mBytecodeSize, JunoShader** ppShader);
+JUNO_API JunoErrorCode JunoCreateShader(JunoShaderCreateInfo* pCreateInfo, JunoShader** ppShader);
 JUNO_API void JunoDestroyShader(JunoShader* pShader);
 JUNO_API void JunoSetShader(JunoDevice* pDevice, JunoShaderStage mStage, JunoShader* pShader); /* NULL unbinds */
 
@@ -568,7 +594,7 @@ JUNO_API void JunoSetShader(JunoDevice* pDevice, JunoShaderStage mStage, JunoSha
 /* Input layout                                                              */
 /* ------------------------------------------------------------------------- */
 
-JUNO_API JunoErrorCode JunoCreateInputLayout(JunoDevice* pDevice, const JunoInputElementDescription* pElements, c_uint mElementCount, JunoShader* pVertexShader, JunoInputLayout** ppLayout);
+JUNO_API JunoErrorCode JunoCreateInputLayout(JunoDevice* pDevice, const JunoInputElementDescription* pElements, c_uint mElementCount, const void* pVertexShaderBytecode, c_size mVertexShaderBytecodeSize, JunoInputLayout** ppLayout);
 JUNO_API void JunoDestroyInputLayout(JunoInputLayout* pLayout);
 JUNO_API void JunoSetInputLayout(JunoDevice* pDevice, JunoInputLayout* pLayout);
 

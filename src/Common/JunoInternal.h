@@ -139,7 +139,6 @@ struct JunoShader
 {
 	JunoShaderStage mStage = JunoShaderStage_Vertex;
 	ComPtr<ID3D11DeviceChild> mShader;
-	std::vector<unsigned char> mBytecode;   /* Kept for vertex shaders (input layout creation). */
 };
 
 /* ------------------------------------------------------------------------- */

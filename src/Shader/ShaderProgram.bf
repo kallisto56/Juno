@@ -53,36 +53,69 @@ class ShaderProgram
 	{
 		let nameC = scope String(mName);
 
-		var result = Juno.CompileShader(source.Ptr, (c_size)source.Length, nameC.CStr(), "VSMain", "vs_5_0", .None, var vsBlob);
+		var compileInfo = Shader.CompileInfo()
+		{
+			mSource = source.Ptr,
+			mSourceLength = (c_size)source.Length,
+			mSourceName = nameC.CStr(),
+			mEntryPoint = "VSMain",
+			mTarget = "vs_5_0",
+			mCompileFlags = .None
+		};
+		var result = Juno.CompileShader(&compileInfo, var vsBlob);
 		if (!JunoLog.Check(result, scope $"Compile {mName} (VSMain)"))
 			return false;
 
-		result = Juno.CompileShader(source.Ptr, (c_size)source.Length, nameC.CStr(), "PSMain", "ps_5_0", .None, var psBlob);
+		compileInfo.mEntryPoint = "PSMain";
+		compileInfo.mTarget = "ps_5_0";
+		result = Juno.CompileShader(&compileInfo, var psBlob);
 		if (!JunoLog.Check(result, scope $"Compile {mName} (PSMain)"))
 		{
 			Juno.DestroyBlob(vsBlob);
 			return false;
 		}
 
-		result = Juno.CreateShader(device, .Vertex, Juno.GetBlobData(vsBlob), Juno.GetBlobSize(vsBlob), var vertexShader);
+		var vertexCreateInfo = Shader.CreateInfo()
+		{
+			mDevice = device,
+			mStage = .Vertex,
+			mBytecode = Juno.GetBlobData(vsBlob),
+			mBytecodeSize = Juno.GetBlobSize(vsBlob)
+		};
+		result = Juno.CreateShader(&vertexCreateInfo, var vertexShader);
 		bool bOk = JunoLog.Check(result, "CreateShader (vertex)");
 		if (bOk)
 		{
 			mVertexShader = vertexShader;
-			result = Juno.CreateShader(device, .Pixel, Juno.GetBlobData(psBlob), Juno.GetBlobSize(psBlob), var pixelShader);
+
+			var pixelCreateInfo = Shader.CreateInfo()
+			{
+				mDevice = device,
+				mStage = .Pixel,
+				mBytecode = Juno.GetBlobData(psBlob),
+				mBytecodeSize = Juno.GetBlobSize(psBlob)
+			};
+
+			result = Juno.CreateShader(&pixelCreateInfo, var pixelShader);
 			bOk = JunoLog.Check(result, "CreateShader (pixel)");
 			if (bOk)
 				mPixelShader = pixelShader;
 		}
+		if (!bOk)
+		{
+			Juno.DestroyBlob(vsBlob);
+			Juno.DestroyBlob(psBlob);
+			return false;
+		}
+
+		result = Juno.CreateInputLayout(device, &layout.mElements[0], (c_uint)layout.mElements.Count, Juno.GetBlobData(vsBlob), Juno.GetBlobSize(vsBlob), var inputLayout);
+		bOk = JunoLog.Check(result, "CreateInputLayout");
+		if (bOk)
+			mInputLayout = inputLayout;
 		Juno.DestroyBlob(vsBlob);
 		Juno.DestroyBlob(psBlob);
 		if (!bOk)
 			return false;
-
-		result = Juno.CreateInputLayout(device, &layout.mElements[0], (c_uint)layout.mElements.Count, mVertexShader, var inputLayout);
-		if (!JunoLog.Check(result, "CreateInputLayout"))
-			return false;
-		mInputLayout = inputLayout;
 		return true;
 	}
 }

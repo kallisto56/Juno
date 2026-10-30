@@ -154,10 +154,10 @@ static class Juno
 	extern static public void SetSamplers(Device* pDevice, ShaderStage mStage, c_uint mStartSlot, c_uint mCount, Sampler** ppSamplers);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCompileShader")]
-	extern static public ErrorCode CompileShader(c_char* pSource, c_size mSourceLength, c_char* pSourceName, c_char* pEntryPoint, c_char* pTarget, ShaderCompileFlags mCompileFlags, out Blob* ppBlob);
+	extern static public ErrorCode CompileShader(Shader.CompileInfo* pCompileInfo, out Blob* ppBlob);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCompileShaderFromFile")]
-	extern static public ErrorCode CompileShaderFromFile(char16* pPath, c_char* pEntryPoint, c_char* pTarget, ShaderCompileFlags mCompileFlags, out Blob* ppBlob);
+	extern static public ErrorCode CompileShaderFromFile(Shader.CompileFromFileInfo* pCompileInfo, out Blob* ppBlob);
 
 	[CallingConvention(.Cdecl), LinkName("JunoGetBlobData")]
 	extern static public void* GetBlobData(Blob* pBlob);
@@ -169,7 +169,7 @@ static class Juno
 	extern static public void DestroyBlob(Blob* pBlob);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateShader")]
-	extern static public ErrorCode CreateShader(Device* pDevice, ShaderStage mStage, void* pBytecode, c_size mBytecodeSize, out Shader* ppShader);
+	extern static public ErrorCode CreateShader(Shader.CreateInfo* pCreateInfo, out Shader* ppShader);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDestroyShader")]
 	extern static public void DestroyShader(Shader* pShader);
@@ -178,7 +178,7 @@ static class Juno
 	extern static public void SetShader(Device* pDevice, ShaderStage mStage, Shader* pShader);
 
 	[CallingConvention(.Cdecl), LinkName("JunoCreateInputLayout")]
-	extern static public ErrorCode CreateInputLayout(Device* pDevice, InputElementDescription* pElements, c_uint mElementCount, Shader* pVertexShader, out InputLayout* ppLayout);
+	extern static public ErrorCode CreateInputLayout(Device* pDevice, InputElementDescription* pElements, c_uint mElementCount, void* pVertexShaderBytecode, c_size mVertexShaderBytecodeSize, out InputLayout* ppLayout);
 
 	[CallingConvention(.Cdecl), LinkName("JunoDestroyInputLayout")]
 	extern static public void DestroyInputLayout(InputLayout* pLayout);
